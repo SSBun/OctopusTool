@@ -143,7 +143,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
   const textCategories = [
     { label: '文本编辑', icon: <Edit />, path: '/tools/text/edit' },
     { label: '文本分析', icon: <Analytics />, path: '/tools/text/analysis' },
-    { label: '随机生成', icon: <Casino />, path: '/tools/text/generate' },
+    { label: '文本生成', icon: <Casino />, path: '/tools/text/generate' },
   ];
 
   // 文档工具

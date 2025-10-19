@@ -8,7 +8,7 @@ Container,
   Paper,
   Alert,
 } from '@mui/material';
-import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
+import { ToolDetailHeader } from '../../components/ToolDetailHeader';
 import { ColorLens, Clear, CheckCircle } from '@mui/icons-material';
 
 interface ColorValues {
@@ -136,7 +136,7 @@ export const ColorTool: React.FC = () => {
       <ToolDetailHeader
         title="颜色转换工具"
         description="RGB, HEX, HSL 等颜色格式相互转换"
-        toolPath="/tools/data/color-converter"
+        toolPath="/tools/design/color-converter"
       />
 
       {error && (

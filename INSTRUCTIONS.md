@@ -135,6 +135,41 @@ Octopus/
    - 间距: `theme.spacing(2)`
    - 断点: `theme.breakpoints.up('md')`
 
+4. **滚动条样式规范**: 所有带滚动条的容器都应适配主题
+   ```tsx
+   <Box
+     sx={{
+       overflowY: 'auto',
+       // 自定义滚动条样式（主题适配）
+       '&::-webkit-scrollbar': {
+         width: '8px',
+       },
+       '&::-webkit-scrollbar-track': {
+         backgroundColor: (theme) => theme.palette.mode === 'dark' 
+           ? 'rgba(255, 255, 255, 0.05)' 
+           : 'rgba(0, 0, 0, 0.05)',
+         borderRadius: '4px',
+       },
+       '&::-webkit-scrollbar-thumb': {
+         backgroundColor: (theme) => theme.palette.primary.main,
+         borderRadius: '4px',
+         '&:hover': {
+           backgroundColor: (theme) => theme.palette.primary.dark,
+         },
+       },
+     }}
+   >
+     Content
+   </Box>
+   ```
+   
+   **要点**:
+   - 滚动条宽度: 8px（标准尺寸）
+   - 轨道颜色: 根据深色/浅色模式自适应半透明背景
+   - 滑块颜色: 使用主题主色 `primary.main`
+   - 悬停效果: 使用 `primary.dark` 加深
+   - 圆角: 4px（柔和美观）
+
 ### 文件命名规范
 
 - 组件文件: PascalCase (如 `ToolCard.tsx`)
@@ -383,6 +418,7 @@ export const CategoryTools: React.FC = () => {
 4. **避免过度优化，保持代码可读性**
 5. **及时更新依赖版本**（注意破坏性更新）
 6. **敏感信息不要提交到代码库**
+7. **所有滚动容器必须应用主题适配的滚动条样式**（见 MUI 样式规范第4点）
 
 ## 资源链接
 

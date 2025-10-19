@@ -13,7 +13,7 @@ export const GenerateTools: React.FC = () => {
 
   return (
     <ToolListPage
-      title="随机生成工具"
+      title="文本生成工具"
       description="密码、UUID、Lorem Ipsum、Emoji 和 Mock 数据生成"
       tools={tools}
     />

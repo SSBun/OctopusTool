@@ -24,14 +24,18 @@ import { HmacTool } from './pages/tools/crypto/HmacTool';
 import { DataTools } from './pages/tools/DataTools';
 import { TimestampTool } from './pages/tools/data/TimestampTool';
 import { RegexTool } from './pages/tools/data/RegexTool';
-import { ColorTool } from './pages/tools/data/ColorTool';
+import { ColorTool } from './pages/design/ColorTool';
+import { ColorPicker } from './pages/design/ColorPicker';
+import { PaletteGenerator } from './pages/design/PaletteGenerator';
+import { GradientGenerator } from './pages/design/GradientGenerator';
+import { ContrastChecker } from './pages/design/ContrastChecker';
+import { ColorSwatches } from './pages/design/ColorSwatches';
 import { UnitTool } from './pages/tools/data/UnitTool';
 import { QrBarcodeTool } from './pages/tools/data/QrBarcodeTool';
 import { TimeTools } from './pages/tools/data/TimeTools';
 import { UnitTools } from './pages/tools/data/UnitTools';
 import { RegexTools } from './pages/tools/data/RegexTools';
 import { QrcodeTools } from './pages/tools/data/QrcodeTools';
-import { ColorTools } from './pages/tools/data/ColorTools';
 import { DevTools } from './pages/tools/data/DevTools';
 import { DataConvertTools } from './pages/tools/data/ConvertTools';
 import { ColorTools as DesignColorTools } from './pages/design/ColorTools';
@@ -69,6 +73,7 @@ import {
   CsvTool,
 } from './pages/tools/text';
 import { MarkdownEditor } from './pages/tools/text/MarkdownEditor';
+import { EmojiTool } from './pages/tools/text/EmojiTool';
 import { VideoTools } from './pages/media/VideoTools';
 import { AudioTools } from './pages/media/AudioTools';
 import { ImageTools } from './pages/media/ImageTools';
@@ -168,13 +173,17 @@ function App() {
             <Route path="tools/data/unit" element={<UnitTools />} />
             <Route path="tools/data/regex" element={<RegexTools />} />
             <Route path="tools/data/qrcode" element={<QrcodeTools />} />
-            <Route path="tools/data/color" element={<ColorTools />} />
             <Route path="tools/data/dev" element={<DevTools />} />
             <Route path="tools/data/convert" element={<DataConvertTools />} />
             {/* 数据处理工具详情页 */}
             <Route path="tools/data/timestamp" element={<TimestampTool />} />
             <Route path="tools/data/regex-tester" element={<RegexTool />} />
-            <Route path="tools/data/color-converter" element={<ColorTool />} />
+            <Route path="tools/design/color-converter" element={<ColorTool />} />
+            <Route path="tools/design/color-picker" element={<ColorPicker />} />
+            <Route path="tools/design/palette-generator" element={<PaletteGenerator />} />
+            <Route path="tools/design/gradient-generator" element={<GradientGenerator />} />
+            <Route path="tools/design/contrast-checker" element={<ContrastChecker />} />
+            <Route path="tools/design/color-swatches" element={<ColorSwatches />} />
             <Route path="tools/data/unit-converter" element={<UnitTool />} />
             <Route path="tools/data/qrbarcode" element={<QrBarcodeTool />} />
             {/* 网络工具 */}
@@ -207,6 +216,7 @@ function App() {
             <Route path="tools/text/lorem" element={<LoremTool />} />
             <Route path="tools/text/csv" element={<CsvTool />} />
             <Route path="tools/text/markdown-editor" element={<MarkdownEditor />} />
+            <Route path="tools/text/emoji" element={<EmojiTool />} />
             {/* 设计工具 */}
             <Route path="tools/design/color" element={<DesignColorTools />} />
             <Route path="tools/design/css" element={<CssTools />} />

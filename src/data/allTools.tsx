@@ -62,6 +62,13 @@ import {
   Filter,
   Security,
   ImageSearch,
+  Palette,
+  Colorize,
+  Lightbulb,
+  Contrast,
+  ViewModule,
+  PhotoLibrary,
+  Label as LabelIcon,
 } from '@mui/icons-material';
 import { Tool } from '../types/tool';
 
@@ -225,13 +232,82 @@ export const ALL_TOOLS: Tool[] = [
     status: '可用',
     category: '数据处理',
   },
+  // === 颜色工具 Phase 1 ===
   {
     icon: <ColorLens sx={{ fontSize: 40 }} />,
     title: '颜色转换',
     description: 'RGB, HEX, HSL 等颜色格式转换',
-    path: '/tools/data/color-converter',
+    path: '/tools/design/color-converter',
     status: '可用',
-    category: '数据转换',
+    category: '设计工具',
+  },
+  {
+    icon: <Palette sx={{ fontSize: 40 }} />,
+    title: '颜色选择器',
+    description: '可视化颜色选择，支持多种格式导出',
+    path: '/tools/design/color-picker',
+    status: '可用',
+    category: '设计工具',
+  },
+  {
+    icon: <Colorize sx={{ fontSize: 40 }} />,
+    title: '调色板生成器',
+    description: '基于主色生成配色方案，支持多种配色规则',
+    path: '/tools/design/palette-generator',
+    status: '可用',
+    category: '设计工具',
+  },
+  
+  // === 颜色工具 Phase 2 ===
+  {
+    icon: <Gradient sx={{ fontSize: 40 }} />,
+    title: '渐变生成器',
+    description: '创建 CSS 渐变，支持线性、径向、圆锥渐变',
+    path: '/tools/design/gradient-generator',
+    status: '可用',
+    category: '设计工具',
+  },
+  {
+    icon: <Contrast sx={{ fontSize: 40 }} />,
+    title: '对比度检查器',
+    description: 'WCAG 无障碍对比度检测和评估',
+    path: '/tools/design/contrast-checker',
+    status: '可用',
+    category: '设计工具',
+  },
+  {
+    icon: <ViewModule sx={{ fontSize: 40 }} />,
+    title: '色卡库',
+    description: 'Material Design、Flat UI 等流行配色方案',
+    path: '/tools/design/color-swatches',
+    status: '可用',
+    category: '设计工具',
+  },
+  
+  // === 颜色工具 Phase 3 (计划中) ===
+  {
+    icon: <PhotoLibrary sx={{ fontSize: 40 }} />,
+    title: '颜色提取器',
+    description: '从图片提取主色调和调色板',
+    path: '/tools/design/color-extractor',
+    status: '计划中',
+    category: '设计工具',
+  },
+  {
+    icon: <Lightbulb sx={{ fontSize: 40 }} />,
+    title: '明暗色生成器',
+    description: '生成颜色的 Tints 和 Shades 变体',
+    path: '/tools/design/tint-shade-generator',
+    status: '计划中',
+    category: '设计工具',
+  },
+  {
+    icon: <LabelIcon sx={{ fontSize: 40 }} />,
+    title: '颜色命名工具',
+    description: '根据色值查找颜色名称和描述',
+    path: '/tools/design/color-namer',
+    status: '计划中',
+    category: '设计工具',
   },
   {
     icon: <Calculate sx={{ fontSize: 40 }} />,
@@ -256,14 +332,6 @@ export const ALL_TOOLS: Tool[] = [
     path: '/tools/data/base-converter',
     status: '计划中',
     category: '数据转换',
-  },
-  {
-    icon: <Gradient sx={{ fontSize: 40 }} />,
-    title: '渐变色生成器',
-    description: 'CSS 渐变色可视化生成和预览',
-    path: '/tools/design/gradient-generator',
-    status: '计划中',
-    category: '设计工具',
   },
   {
     icon: <Layers sx={{ fontSize: 40 }} />,
@@ -472,9 +540,9 @@ export const ALL_TOOLS: Tool[] = [
   {
     icon: <EmojiEmotions sx={{ fontSize: 40 }} />,
     title: 'Emoji 大全',
-    description: 'Emoji 表情搜索和一键复制',
+    description: 'Emoji 表情搜索、收藏、分类浏览和组合生成',
     path: '/tools/text/emoji',
-    status: '计划中',
+    status: '可用',
     category: '文本处理',
   },
   {

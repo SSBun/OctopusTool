@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -13,6 +13,7 @@ import {
   Card,
   CardContent,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Clear } from '@mui/icons-material';
 
 type CaseType =
@@ -158,14 +159,11 @@ export const CaseTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          大小写转换工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          转换文本的大小写格式，支持多种编程命名风格
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="大小写转换工具"
+        description="转换文本的大小写格式，支持多种编程命名风格"
+        toolPath="/tools/text/case"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

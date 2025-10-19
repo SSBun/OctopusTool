@@ -12,6 +12,7 @@ import {
   Switch,
 } from '@mui/material';
 import { Code, ContentCopy, Clear, CheckCircle } from '@mui/icons-material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 
 export const JsonFormatter: React.FC = () => {
   const [input, setInput] = useState('');
@@ -80,14 +81,11 @@ export const JsonFormatter: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          JSON 格式化工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          美化和格式化 JSON 数据，使其更易读
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="JSON 格式化工具"
+        description="美化和格式化 JSON 数据，使其更易读"
+        toolPath="/tools/json/formatter"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
         <Button

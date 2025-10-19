@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -13,6 +13,7 @@ import {
   InputAdornment,
   Divider,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Search, CheckCircle, Info, Warning, Error as ErrorIcon } from '@mui/icons-material';
 
 interface StatusCode {
@@ -136,14 +137,11 @@ export const StatusCodeTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          HTTP 状态码查询
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          查询 HTTP 响应状态码的含义和说明
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="HTTP 状态码查询"
+        description="查询 HTTP 响应状态码的含义和说明"
+        toolPath="/tools/network/status-code"
+      />
 
       {/* 搜索框 */}
       <Paper sx={{ p: 3, mb: 3 }}>

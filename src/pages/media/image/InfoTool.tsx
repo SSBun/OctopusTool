@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -13,6 +13,7 @@ import {
   TableRow,
   TableCell,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ImageUploadBox } from '../../../components/ImageUploadBox';
 
 interface ImageInfo {
@@ -82,14 +83,11 @@ export const InfoTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          图片信息
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          查看图片的详细信息，包括尺寸、大小、格式等
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="图片信息"
+        description="查看图片的详细信息，包括尺寸、大小、格式等"
+        toolPath="/media/image/info"
+      />
 
       {error && (
         <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -19,6 +19,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Clear, SwapHoriz } from '@mui/icons-material';
 
 type Mode = 'csv-to-json' | 'json-to-csv';
@@ -173,14 +174,11 @@ export const CsvTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          CSV 转换工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          CSV 与 JSON 格式互相转换
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="CSV 转换工具"
+        description="CSV 与 JSON 格式互相转换"
+        toolPath="/tools/text/csv"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

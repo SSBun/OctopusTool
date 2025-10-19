@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -13,6 +13,7 @@ import {
   Tabs,
   Tab,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Calculate, SwapHoriz } from '@mui/icons-material';
 
 type UnitCategory = 'length' | 'weight' | 'temperature';
@@ -156,14 +157,11 @@ export const UnitTool: React.FC = () => {
 
   return (
     <Container maxWidth="md">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          单位转换工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          长度、重量、温度等单位转换
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="单位转换工具"
+        description="长度、重量、温度等单位转换"
+        toolPath="/tools/data/unit-converter"
+      />
 
       <Paper sx={{ mb: 3 }}>
         <Tabs

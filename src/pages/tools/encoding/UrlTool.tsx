@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -10,6 +10,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Link, ContentCopy, Clear, CheckCircle } from '@mui/icons-material';
 
 type Mode = 'encode' | 'decode';
@@ -61,14 +62,11 @@ export const UrlTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          URL 编解码工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          对 URL 进行编码和解码，处理特殊字符和中文字符
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="URL 编解码工具"
+        description="对 URL 进行编码和解码，处理特殊字符和中文字符"
+        toolPath="/tools/encoding/url"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
         <ToggleButtonGroup

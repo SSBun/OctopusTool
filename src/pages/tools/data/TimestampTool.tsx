@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -11,6 +11,7 @@ import {
   ToggleButton,
   Divider,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Schedule, Clear, CheckCircle, Refresh } from '@mui/icons-material';
 
 export const TimestampTool: React.FC = () => {
@@ -70,14 +71,11 @@ export const TimestampTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          时间戳转换工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          时间戳和日期时间相互转换
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="时间戳转换工具"
+        description="时间戳和日期时间相互转换"
+        toolPath="/tools/data/timestamp"
+      />
 
       {copied && (
         <Alert severity="success" icon={<CheckCircle />} sx={{ mb: 3 }}>

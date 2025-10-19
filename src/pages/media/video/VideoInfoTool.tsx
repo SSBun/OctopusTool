@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -10,6 +10,7 @@ import {
   Chip,
   Stack,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import {
   Videocam,
   AspectRatio,
@@ -154,14 +155,11 @@ export const VideoInfoTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          视频信息查看
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          查看视频的详细信息，包括分辨率、时长、大小等
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="视频信息查看"
+        description="查看视频的详细信息，包括分辨率、时长、大小等"
+        toolPath="/media/video/info"
+      />
 
       {error && (
         <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>

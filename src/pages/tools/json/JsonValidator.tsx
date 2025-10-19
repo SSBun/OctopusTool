@@ -20,6 +20,7 @@ import {
   Clear,
   DataObject,
 } from '@mui/icons-material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 
 interface ValidationResult {
   valid: boolean;
@@ -132,14 +133,11 @@ export const JsonValidator: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          JSON 验证工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          验证 JSON 格式是否正确，并提供详细的错误信息
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="JSON 验证工具"
+        description="验证 JSON 格式是否正确，并提供详细的错误信息"
+        toolPath="/tools/json/validator"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
         <Button

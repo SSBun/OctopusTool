@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -16,6 +16,7 @@ import {
   Tabs,
   Tab,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Send, ContentCopy, Clear, Add, Delete } from '@mui/icons-material';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
@@ -167,14 +168,11 @@ export const HttpTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          HTTP 请求测试
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          在线发送 HTTP 请求，测试 API 接口
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="HTTP 请求测试"
+        description="在线发送 HTTP 请求，测试 API 接口"
+        toolPath="/tools/network/http-request"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

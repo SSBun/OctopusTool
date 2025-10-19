@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -16,6 +16,7 @@ import {
   Chip,
   LinearProgress,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import {
   Mic,
   Stop,
@@ -202,14 +203,11 @@ export const RecorderTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          音频录制
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          使用麦克风录制音频，保存为文件
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="音频录制"
+        description="使用麦克风录制音频，保存为文件"
+        toolPath="/media/audio/recorder"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

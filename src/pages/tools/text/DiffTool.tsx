@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -12,6 +12,7 @@ import {
   Chip,
   Divider,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Compare, Clear, SwapHoriz } from '@mui/icons-material';
 
 interface DiffLine {
@@ -105,14 +106,11 @@ export const DiffTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          文本对比工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          比较两段文本的差异，逐行对比并高亮显示
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="文本对比工具"
+        description="比较两段文本的差异，逐行对比并高亮显示"
+        toolPath="/tools/text/diff"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -10,6 +10,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { TextFields, ContentCopy, Clear, CheckCircle } from '@mui/icons-material';
 
 type Mode = 'encode' | 'decode';
@@ -71,14 +72,11 @@ export const UnicodeTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          Unicode 转换工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          Unicode 和普通文本相互转换
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="Unicode 转换工具"
+        description="Unicode 和普通文本相互转换"
+        toolPath="/tools/encoding/unicode"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
         <ToggleButtonGroup

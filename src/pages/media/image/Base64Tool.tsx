@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -12,6 +12,7 @@ import {
   Tabs,
   Tab,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Download } from '@mui/icons-material';
 import { ImageUploadBox } from '../../../components/ImageUploadBox';
 
@@ -102,14 +103,11 @@ export const Base64Tool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          Base64 转换
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          图片与 Base64 编码互相转换，方便在网页中嵌入图片
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="Base64 转换"
+        description="图片与 Base64 编码互相转换，方便在网页中嵌入图片"
+        toolPath="/media/image/base64"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

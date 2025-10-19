@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -11,6 +11,7 @@ import {
   ListItem,
   ListItemText,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Fingerprint, Clear, CheckCircle } from '@mui/icons-material';
 
 // 简单的 MD5 实现（用于演示）
@@ -71,14 +72,11 @@ export const Md5Tool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          MD5 加密工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          计算文本的 MD5 哈希值（仅用于演示，生产环境请使用专业加密库）
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="MD5 加密工具"
+        description="计算文本的 MD5 哈希值（仅用于演示，生产环境请使用专业加密库）"
+        toolPath="/tools/crypto/md5"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
         <Button

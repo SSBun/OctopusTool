@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -14,6 +14,7 @@ import {
   ToggleButton,
   Chip,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Clear, FilterList } from '@mui/icons-material';
 
 type DedupeMode = 'keep-first' | 'keep-last' | 'keep-all';
@@ -84,14 +85,11 @@ export const DedupeTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          去重工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          删除文本中的重复行，保持数据唯一性
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="去重工具"
+        description="删除文本中的重复行，保持数据唯一性"
+        toolPath="/tools/text/dedupe"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

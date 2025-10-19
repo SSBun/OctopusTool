@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -16,6 +16,7 @@ import {
   LinearProgress,
   SelectChangeEvent,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Download, PlayArrow, Pause } from '@mui/icons-material';
 import { ImageUploadBox } from '../../../components/ImageUploadBox';
 import GIF from 'gif.js';
@@ -254,14 +255,11 @@ export const GifMakerTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          GIF 制作
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          从视频片段生成 GIF 动图
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="GIF 制作"
+        description="从视频片段生成 GIF 动图"
+        toolPath="/media/video/gif-maker"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

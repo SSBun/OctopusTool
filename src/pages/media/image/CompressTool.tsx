@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -11,6 +11,7 @@ import {
   Divider,
   Chip,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Download } from '@mui/icons-material';
 import { ImageUploadBox } from '../../../components/ImageUploadBox';
 
@@ -109,14 +110,11 @@ export const CompressTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          图片压缩
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          在线压缩图片大小，支持自定义质量，所有处理都在浏览器本地完成，安全可靠
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="图片压缩"
+        description="在线压缩图片大小，支持自定义质量，所有处理都在浏览器本地完成，安全可靠"
+        toolPath="/media/image/compress"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

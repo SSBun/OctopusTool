@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -18,6 +18,7 @@ import {
   FormControlLabel,
   Radio,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import {
   Security,
   ContentCopy,
@@ -194,14 +195,11 @@ export const HmacTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          HMAC 签名工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          基于哈希的消息认证码（HMAC），用于验证消息完整性和真实性
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="HMAC 签名工具"
+        description="基于哈希的消息认证码（HMAC），用于验证消息完整性和真实性"
+        toolPath="/tools/crypto/hmac"
+      />
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>

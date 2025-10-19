@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -15,6 +15,7 @@ import {
   Tab,
   Slider,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import {
   QrCode2,
   QrCodeScanner,
@@ -296,14 +297,11 @@ export const QrBarcodeTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          二维码/条形码工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          专业的二维码生成、解析和条形码生成工具
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="二维码/条形码工具"
+        description="专业的二维码生成、解析和条形码生成工具"
+        toolPath="/tools/data/qrbarcode"
+      />
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>

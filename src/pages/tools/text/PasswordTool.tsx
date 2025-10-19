@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -15,6 +15,7 @@ import {
   LinearProgress,
   Chip,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Refresh, VpnKey } from '@mui/icons-material';
 
 export const PasswordTool: React.FC = () => {
@@ -94,14 +95,11 @@ export const PasswordTool: React.FC = () => {
 
   return (
     <Container maxWidth="md">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          密码生成器
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          生成安全的随机密码，可自定义长度和字符类型
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="密码生成器"
+        description="生成安全的随机密码，可自定义长度和字符类型"
+        toolPath="/tools/text/password"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

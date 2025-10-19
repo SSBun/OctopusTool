@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -15,6 +15,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Clear } from '@mui/icons-material';
 
 type SortOrder = 'asc' | 'desc';
@@ -85,14 +86,11 @@ export const SortTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          文本排序工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          按字母、数字或长度对文本行进行排序
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="文本排序工具"
+        description="按字母、数字或长度对文本行进行排序"
+        toolPath="/tools/text/sort"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

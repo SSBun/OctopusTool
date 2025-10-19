@@ -9,6 +9,7 @@ import {
   Grid,
   Stack,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import {
   Audiotrack,
   AccessTime,
@@ -150,14 +151,11 @@ export const AudioInfoTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          音频信息查看
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          查看音频文件的详细信息
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="音频信息查看"
+        description="查看音频文件的详细信息"
+        toolPath="/media/audio/info"
+      />
 
       {error && (
         <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>

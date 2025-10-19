@@ -10,6 +10,7 @@ import {
   Chip,
 } from '@mui/material';
 import { CompressOutlined, ContentCopy, Clear, CheckCircle } from '@mui/icons-material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 
 export const JsonMinify: React.FC = () => {
   const [input, setInput] = useState('');
@@ -80,14 +81,11 @@ export const JsonMinify: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          JSON 压缩工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          压缩 JSON 数据，移除空格和换行，减少文件大小
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="JSON 压缩工具"
+        description="压缩 JSON 数据，移除空格和换行，减少文件大小"
+        toolPath="/tools/json/minify"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
         <Button

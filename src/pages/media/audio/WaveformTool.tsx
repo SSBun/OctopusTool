@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -12,6 +12,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { PlayArrow, Pause, GraphicEq } from '@mui/icons-material';
 import { ImageUploadBox } from '../../../components/ImageUploadBox';
 
@@ -579,14 +580,11 @@ export const WaveformTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          音频波形可视化
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          查看音频波形和频谱，实时可视化播放
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="音频波形可视化"
+        description="查看音频波形和频谱，实时可视化播放"
+        toolPath="/media/audio/waveform"
+      />
 
       {error && (
         <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>

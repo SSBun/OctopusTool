@@ -262,15 +262,118 @@ npm run deploy
 2. 网络请求使用 try-catch
 3. 提供友好的错误提示
 
-## 添加新工具的流程
+## 组件复用架构
 
-1. 在 `src/pages/` 创建工具页面组件
-2. 在 `src/types/` 添加相关类型定义
-3. 在路由配置中注册新路由
-4. 在导航菜单中添加入口
-5. 编写工具的核心逻辑
-6. 添加必要的测试（可选）
-7. 更新文档
+### 核心可复用组件
+
+项目采用高度可复用的组件设计：
+
+1. **ToolCard** (`src/components/ToolCard.tsx`)
+   - 统一的工具卡片UI，包含收藏功能
+   - 自动处理可用/不可用状态
+   - 统一样式和动画
+
+2. **ToolListPage** (`src/components/ToolListPage.tsx`)
+   - 统一的工具列表页面布局
+   - 响应式网格布局
+   - 自动使用 ToolCard 渲染
+
+3. **FavoriteButton** (`src/components/FavoriteButton.tsx`)
+   - 详情页收藏按钮
+   - 支持不同尺寸
+
+4. **FavoritesContext** (`src/contexts/FavoritesContext.tsx`)
+   - 全局收藏状态管理
+   - localStorage 持久化
+
+### 工具数据管理
+
+**集中式数据管理** (`src/data/allTools.tsx`)
+- 所有工具的配置信息集中管理
+- 统一的 Tool 类型定义
+- 便于维护和更新
+
+**Tool 类型定义** (`src/types/tool.ts`)
+```tsx
+interface Tool {
+  icon: ReactElement;
+  title: string;
+  description: string;
+  path: string;
+  status: '可用' | '即将推出' | '开发中' | '计划中';
+  category?: string;
+}
+```
+
+## 添加新工具的流程（简化版）
+
+### 1. 在 allTools.tsx 添加工具配置
+
+```tsx
+// src/data/allTools.tsx
+{
+  icon: <NewIcon sx={{ fontSize: 40 }} />,
+  title: '新工具名称',
+  description: '工具描述',
+  path: '/tools/category/new-tool',
+  status: '可用',
+  category: '工具分类',
+}
+```
+
+### 2. 创建工具详情页
+
+```tsx
+// src/pages/tools/category/NewTool.tsx
+import { FavoriteButton } from '../../../components/FavoriteButton';
+
+export const NewTool: React.FC = () => (
+  <Container maxWidth="xl">
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 4 }}>
+      <Box>
+        <Typography variant="h4">新工具</Typography>
+        <Typography color="text.secondary">描述</Typography>
+      </Box>
+      <FavoriteButton toolPath="/tools/category/new-tool" />
+    </Box>
+    {/* 工具功能实现 */}
+  </Container>
+);
+```
+
+### 3. 添加路由
+
+```tsx
+// src/App.tsx
+<Route path="tools/category/new-tool" element={<NewTool />} />
+```
+
+### 4. （可选）创建或更新分类页面
+
+使用 ToolListPage 组件：
+
+```tsx
+// src/pages/tools/CategoryTools.tsx
+import { ToolListPage } from '../../components/ToolListPage';
+import { ALL_TOOLS } from '../../data/allTools';
+
+export const CategoryTools: React.FC = () => {
+  const tools = ALL_TOOLS.filter(tool => tool.category === '工具分类');
+  
+  return (
+    <ToolListPage
+      title="工具分类"
+      description="分类描述"
+      tools={tools}
+    />
+  );
+};
+```
+
+**优势**: 
+- 列表页和收藏功能自动生效
+- 无需手动实现卡片UI
+- 修改卡片样式只需改 ToolCard.tsx 一处
 
 ## 注意事项
 

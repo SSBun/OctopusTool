@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -10,6 +10,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Code, ContentCopy, Clear, CheckCircle } from '@mui/icons-material';
 
 type Mode = 'encode' | 'decode';
@@ -74,14 +75,11 @@ export const HtmlEntityTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          HTML 实体编码工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          HTML 特殊字符编码和解码
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="HTML 实体编码工具"
+        description="HTML 特殊字符编码和解码"
+        toolPath="/tools/encoding/html"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
         <ToggleButtonGroup

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -10,6 +10,7 @@ import {
   Divider,
   Slider,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import {
   Download,
   PlayArrow,
@@ -262,14 +263,11 @@ export const TrimTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          音频裁剪
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          裁剪音频片段，导出为 WAV 格式
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="音频裁剪"
+        description="裁剪音频片段，导出为 WAV 格式"
+        toolPath="/media/audio/trim"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

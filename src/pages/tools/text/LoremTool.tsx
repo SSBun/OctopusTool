@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -12,6 +12,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Refresh } from '@mui/icons-material';
 
 type Unit = 'paragraphs' | 'sentences' | 'words';
@@ -105,14 +106,11 @@ export const LoremTool: React.FC = () => {
 
   return (
     <Container maxWidth="md">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          Lorem Ipsum 生成器
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          生成占位文本，用于设计和开发演示
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="Lorem Ipsum 生成器"
+        description="生成占位文本，用于设计和开发演示"
+        toolPath="/tools/text/lorem"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

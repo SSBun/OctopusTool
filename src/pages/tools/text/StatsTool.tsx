@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -13,6 +13,7 @@ import {
   Divider,
   LinearProgress,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import {
   FormatListNumbered,
   Subject,
@@ -107,14 +108,11 @@ export const StatsTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          文本统计工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          统计文本的字符数、单词数、行数等详细信息
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="文本统计工具"
+        description="统计文本的字符数、单词数、行数等详细信息"
+        toolPath="/tools/text/stats"
+      />
 
       {/* 输入区域 */}
       <Paper sx={{ p: 3, mb: 3 }}>

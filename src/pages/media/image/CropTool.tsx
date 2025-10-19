@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -14,6 +14,7 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Download, Crop } from '@mui/icons-material';
 import { ImageUploadBox } from '../../../components/ImageUploadBox';
 
@@ -145,14 +146,11 @@ export const CropTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          图片裁剪
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          支持自由裁剪和按比例裁剪（1:1, 16:9, 4:3 等）
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="图片裁剪"
+        description="支持自由裁剪和按比例裁剪（1:1, 16:9, 4:3 等）"
+        toolPath="/media/image/crop"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

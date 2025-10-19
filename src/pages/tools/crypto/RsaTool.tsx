@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -18,6 +18,7 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import {
   Lock,
   LockOpen,
@@ -266,14 +267,11 @@ export const RsaTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          RSA 加密/解密工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          专业的 RSA 非对称加密工具，支持密钥生成、公钥加密、私钥解密
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="RSA 加密/解密工具"
+        description="专业的 RSA 非对称加密工具，支持密钥生成、公钥加密、私钥解密"
+        toolPath="/tools/crypto/rsa"
+      />
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>

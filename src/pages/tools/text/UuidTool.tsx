@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -10,6 +10,7 @@ import {
   TextField,
   Divider,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Refresh, Add } from '@mui/icons-material';
 
 export const UuidTool: React.FC = () => {
@@ -53,14 +54,11 @@ export const UuidTool: React.FC = () => {
 
   return (
     <Container maxWidth="md">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          UUID 生成器
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          生成全局唯一标识符 (UUID v4)
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="UUID 生成器"
+        description="生成全局唯一标识符 (UUID v4)"
+        toolPath="/tools/text/uuid"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

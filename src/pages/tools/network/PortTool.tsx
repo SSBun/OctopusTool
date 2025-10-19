@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -14,6 +14,7 @@ import {
   Alert,
   Divider,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Search, Security, Warning } from '@mui/icons-material';
 
 interface PortInfo {
@@ -124,14 +125,11 @@ export const PortTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          常见端口查询
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          查询常见网络端口的服务、协议和安全风险信息
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="常见端口查询"
+        description="查询常见网络端口的服务、协议和安全风险信息"
+        toolPath="/tools/network/port"
+      />
 
       <Alert severity="info" sx={{ mb: 3 }}>
         <strong>说明：</strong> 由于浏览器安全限制，无法直接扫描网络端口。

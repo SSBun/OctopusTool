@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -14,6 +14,7 @@ import {
   Checkbox,
   Chip,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Clear } from '@mui/icons-material';
 
 export const ReplaceTool: React.FC = () => {
@@ -94,14 +95,11 @@ export const ReplaceTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          查找替换工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          批量查找和替换文本，支持正则表达式
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="查找替换工具"
+        description="批量查找和替换文本，支持正则表达式"
+        toolPath="/tools/text/replace"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

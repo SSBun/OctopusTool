@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemText,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Pattern, Clear } from '@mui/icons-material';
 
 export const RegexTool: React.FC = () => {
@@ -76,14 +77,11 @@ export const RegexTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          正则表达式测试工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          在线测试和调试正则表达式
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="正则表达式测试工具"
+        description="在线测试和调试正则表达式"
+        toolPath="/tools/data/regex-tester"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
         <Button

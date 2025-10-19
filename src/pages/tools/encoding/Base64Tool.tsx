@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -10,6 +10,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { SwapHoriz, ContentCopy, Clear, CheckCircle } from '@mui/icons-material';
 
 type Mode = 'encode' | 'decode';
@@ -61,14 +62,11 @@ export const Base64Tool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          Base64 编解码工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          对文本进行 Base64 编码和解码，支持 UTF-8 字符
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="Base64 编解码工具"
+        description="对文本进行 Base64 编码和解码，支持 UTF-8 字符"
+        toolPath="/tools/encoding/base64"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
         <ToggleButtonGroup

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -17,6 +17,7 @@ import {
   InputLabel,
   SelectChangeEvent,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Download } from '@mui/icons-material';
 import { ImageUploadBox } from '../../../components/ImageUploadBox';
 
@@ -173,14 +174,11 @@ export const ResizeTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          图片缩放
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          调整图片尺寸，支持按比例缩放和自定义尺寸
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="图片缩放"
+        description="调整图片尺寸，支持按比例缩放和自定义尺寸"
+        toolPath="/media/image/resize"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

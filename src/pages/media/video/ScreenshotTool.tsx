@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -18,6 +18,7 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Download, PlayArrow, Pause, Delete, ZoomIn } from '@mui/icons-material';
 import { ImageUploadBox } from '../../../components/ImageUploadBox';
 
@@ -177,14 +178,11 @@ export const ScreenshotTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          视频截图
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          从视频中截取任意帧，保存为图片
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="视频截图"
+        description="从视频中截取任意帧，保存为图片"
+        toolPath="/media/video/screenshot"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

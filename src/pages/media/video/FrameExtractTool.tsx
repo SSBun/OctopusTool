@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -15,6 +15,7 @@ import {
   IconButton,
   Slider,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Download, Delete } from '@mui/icons-material';
 import { ImageUploadBox } from '../../../components/ImageUploadBox';
 
@@ -161,14 +162,11 @@ export const FrameExtractTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          视频帧提取
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          从视频中批量提取关键帧，保存为图片
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="视频帧提取"
+        description="从视频中批量提取关键帧，保存为图片"
+        toolPath="/media/video/frame-extract"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

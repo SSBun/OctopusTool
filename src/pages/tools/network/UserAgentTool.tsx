@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
-  Box,
   Paper,
   TextField,
   Button,
@@ -12,6 +11,7 @@ import {
   Chip,
   Grid,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Clear, DevicesOther } from '@mui/icons-material';
 
 interface ParsedUA {
@@ -166,14 +166,11 @@ export const UserAgentTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          User Agent 解析器
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          解析浏览器 User Agent 字符串，识别浏览器、操作系统和设备类型
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="User Agent 解析器"
+        description="解析浏览器 User Agent 字符串，识别浏览器、操作系统和设备类型"
+        toolPath="/tools/network/user-agent"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

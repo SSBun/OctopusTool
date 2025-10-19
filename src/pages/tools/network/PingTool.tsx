@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -18,6 +18,7 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { NetworkPing, CheckCircle, Cancel, Refresh, Add, Delete } from '@mui/icons-material';
 
 interface PingTarget {
@@ -269,14 +270,11 @@ export const PingTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          Ping 测试
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          测试主流平台的网络连通性和响应时间
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="Ping 测试"
+        description="测试主流平台的网络连通性和响应时间"
+        toolPath="/tools/network/ping"
+      />
 
       <Alert severity="info" sx={{ mb: 3 }}>
         <strong>说明：</strong> 由于浏览器安全限制，此工具通过发送 HTTP 请求来测试网站可访问性。

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -12,6 +12,7 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Security, ContentCopy, Clear, CheckCircle } from '@mui/icons-material';
 
 type HashAlgorithm = 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
@@ -60,14 +61,11 @@ export const HashTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          SHA 哈希工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          使用 SHA-1/SHA-256/SHA-384/SHA-512 算法计算哈希值
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="SHA 哈希工具"
+        description="使用 SHA-1/SHA-256/SHA-384/SHA-512 算法计算哈希值"
+        toolPath="/tools/crypto/hash"
+      />
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
         <FormControl size="small" sx={{ minWidth: 120 }}>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -14,6 +14,7 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Download } from '@mui/icons-material';
 import { ImageUploadBox } from '../../../components/ImageUploadBox';
 
@@ -112,14 +113,11 @@ export const ConvertTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          图片格式转换
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          支持 JPG、PNG、WebP 等格式互转，所有处理都在浏览器本地完成
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="图片格式转换"
+        description="支持 JPG、PNG、WebP 等格式互转，所有处理都在浏览器本地完成"
+        toolPath="/media/image/convert"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -21,6 +21,7 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ContentCopy, Clear, SwapHoriz, Add, Delete } from '@mui/icons-material';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
@@ -397,14 +398,11 @@ pause
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          Curl 命令工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          生成和解析 curl 命令，快速构建 HTTP 请求
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="Curl 命令工具"
+        description="生成和解析 curl 命令，快速构建 HTTP 请求"
+        toolPath="/tools/network/curl"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

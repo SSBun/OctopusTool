@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -13,6 +13,7 @@ import {
   Chip,
   Stack,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Lock, LockOpen, ContentCopy, Clear, Info } from '@mui/icons-material';
 import CryptoJS from 'crypto-js';
 
@@ -207,14 +208,11 @@ export const AesTool: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          AES 加密/解密工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          专业的 AES（高级加密标准）加密解密工具，支持多种模式和填充方式
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="AES 加密/解密工具"
+        description="专业的 AES（高级加密标准）加密解密工具，支持多种模式和填充方式"
+        toolPath="/tools/crypto/aes"
+      />
 
       {/* 配置面板 */}
       <Paper sx={{ p: 3, mb: 3 }}>

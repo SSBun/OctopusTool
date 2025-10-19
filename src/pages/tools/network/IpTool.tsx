@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   Paper,
@@ -12,6 +12,7 @@ import {
   Button,
   Stack,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { Public, ContentCopy, Refresh } from '@mui/icons-material';
 
 interface IpInfo {
@@ -65,14 +66,11 @@ export const IpTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          IP 地址查询
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          查询您的公网 IP 地址和地理位置信息
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="IP 地址查询"
+        description="查询您的公网 IP 地址和地理位置信息"
+        toolPath="/tools/network/ip"
+      />
 
       {success && (
         <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>

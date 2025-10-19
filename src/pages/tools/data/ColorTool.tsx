@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container,
+Container,
   Typography,
   Box,
   TextField,
@@ -8,6 +8,7 @@ import {
   Paper,
   Alert,
 } from '@mui/material';
+import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import { ColorLens, Clear, CheckCircle } from '@mui/icons-material';
 
 interface ColorValues {
@@ -132,14 +133,11 @@ export const ColorTool: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
-          颜色转换工具
-        </Typography>
-        <Typography color="text.secondary" paragraph>
-          RGB, HEX, HSL 等颜色格式相互转换
-        </Typography>
-      </Box>
+      <ToolDetailHeader
+        title="颜色转换工具"
+        description="RGB, HEX, HSL 等颜色格式相互转换"
+        toolPath="/tools/data/color-converter"
+      />
 
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>

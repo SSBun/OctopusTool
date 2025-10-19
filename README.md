@@ -5,7 +5,7 @@
 
 一个基于 React + TypeScript + Material-UI 的开发者工具聚合网站。
 
-**🌐 在线访问：[https://ssbun.github.io/Octopus/](https://ssbun.github.io/Octopus/)**
+**🌐 在线访问：[https://ssbun.github.io/OctopusTool/](https://ssbun.github.io/OctopusTool/)**
 
 ## 技术栈
 

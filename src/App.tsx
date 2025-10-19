@@ -98,7 +98,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter basename="/Octopus">
+      <BrowserRouter basename="/OctopusTool">
         <Routes>
           <Route path="/" element={<MainLayout onToggleTheme={toggleTheme} />}>
             <Route index element={<Home />} />

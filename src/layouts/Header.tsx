@@ -14,6 +14,8 @@ import {
   Brightness7,
   Menu as MenuIcon,
   Search as SearchIcon,
+  GitHub as GitHubIcon,
+  StarBorder as StarIcon,
 } from '@mui/icons-material';
 import { SearchDialog } from '../components/SearchDialog';
 
@@ -110,6 +112,53 @@ export const Header: React.FC<HeaderProps> = ({ onToggleTheme, onToggleSidebar }
               aria-label="search"
             >
               <SearchIcon />
+            </IconButton>
+
+            {/* GitHub Star 按钮 */}
+            <Button
+              variant="outlined"
+              startIcon={<GitHubIcon />}
+              endIcon={<StarIcon sx={{ fontSize: 18 }} />}
+              onClick={() => window.open('https://github.com/SSBun/OctopusTool', '_blank')}
+              sx={{
+                color: 'inherit',
+                borderColor: 'rgba(255, 255, 255, 0.3)',
+                display: { xs: 'none', md: 'flex' },
+                textTransform: 'none',
+                px: 2,
+                '&:hover': {
+                  borderColor: 'rgba(255, 255, 255, 0.5)',
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                  '& .MuiSvgIcon-root': {
+                    transform: 'scale(1.1)',
+                  },
+                },
+                '& .MuiSvgIcon-root': {
+                  transition: 'transform 0.2s',
+                },
+              }}
+            >
+              Star
+            </Button>
+
+            {/* 移动端 GitHub 图标 */}
+            <IconButton
+              onClick={() => window.open('https://github.com/SSBun/OctopusTool', '_blank')}
+              color="inherit"
+              sx={{ 
+                display: { xs: 'flex', md: 'none' },
+                '&:hover': {
+                  '& .MuiSvgIcon-root': {
+                    transform: 'rotate(360deg)',
+                  },
+                },
+                '& .MuiSvgIcon-root': {
+                  transition: 'transform 0.5s',
+                },
+              }}
+              aria-label="github"
+            >
+              <GitHubIcon />
             </IconButton>
 
             <IconButton onClick={onToggleTheme} color="inherit" aria-label="toggle theme">

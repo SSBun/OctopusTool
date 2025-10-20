@@ -28,6 +28,7 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ open, onClose }) => 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
+  const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   // 模糊搜索（只显示可用的工具）
   const searchResults = useMemo(() => {
@@ -48,6 +49,16 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ open, onClose }) => 
   useEffect(() => {
     setSelectedIndex(0);
   }, [searchQuery]);
+
+  // 自动滚动到选中项
+  useEffect(() => {
+    if (listItemRefs.current[selectedIndex]) {
+      listItemRefs.current[selectedIndex]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }, [selectedIndex]);
 
   // 重置搜索并自动聚焦
   useEffect(() => {
@@ -159,7 +170,11 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ open, onClose }) => 
             }}
           >
             {searchResults.map((tool, index) => (
-              <ListItem key={tool.path} disablePadding>
+              <ListItem 
+                key={tool.path} 
+                disablePadding
+                ref={(el) => (listItemRefs.current[index] = el)}
+              >
                 <ListItemButton
                   selected={index === selectedIndex}
                   onClick={() => handleNavigate(tool.path)}

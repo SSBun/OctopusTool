@@ -83,7 +83,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         helperText={helperText}
         InputProps={{
           startAdornment: (
-            <InputAdornment position="start">
+            <InputAdornment position="start" sx={{ ml: 1 }}>
               <IconButton
                 onClick={handleOpenPicker}
                 edge="start"

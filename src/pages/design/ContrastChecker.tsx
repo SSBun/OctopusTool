@@ -164,11 +164,11 @@ export const ContrastChecker: React.FC = () => {
                 borderColor: 'divider',
               }}
             >
-              <Typography variant="h5" gutterBottom>
-                这是大号文本示例
+              <Typography variant="h5" gutterBottom fontWeight="bold" sx={{ fontSize: '24px' }}>
+                这是大号文本示例（24px加粗）
               </Typography>
-              <Typography variant="h6">
-                Large Text Example (18px+)
+              <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '18px' }}>
+                Large Text Example (18px+ Bold)
               </Typography>
             </Box>
 

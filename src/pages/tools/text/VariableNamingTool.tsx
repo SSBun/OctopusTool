@@ -20,6 +20,11 @@ import {
   Tooltip,
   LinearProgress,
   SelectChangeEvent,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  Divider,
 } from '@mui/material';
 import {
   ContentCopy,
@@ -30,6 +35,10 @@ import {
   Code,
   Psychology,
   ExpandMore,
+  History,
+  Close,
+  Delete,
+  Translate,
 } from '@mui/icons-material';
 import { useAIConfig } from '../../../contexts/AIConfigContext';
 import { createActiveAIService } from '../../../services/aiService';
@@ -56,11 +65,28 @@ const NAME_LENGTHS = [
 interface CandidateSuggestion {
   name: string;
   score: number;
+  wordBreakdown: {
+    words: string[];        // 拆分的单词
+    translations: string[]; // 对应的中文翻译
+    explanation: string;    // 整体解释
+  };
   reasons: {
     clarity: string;
     convention: string;
     meaning: string;
   };
+}
+
+// 历史记录接口
+interface HistoryRecord {
+  id: string;
+  timestamp: number;
+  description: string;
+  additionalContext: string;
+  namingStyle: string;
+  nameLength: string;
+  useAbbreviation: boolean;
+  suggestions: CandidateSuggestion[];
 }
 
 // AI 响应结构
@@ -69,6 +95,11 @@ const suggestionSchema = z.object({
     z.object({
       name: z.string(),
       score: z.number().min(0).max(100),
+      wordBreakdown: z.object({
+        words: z.array(z.string()),
+        translations: z.array(z.string()),
+        explanation: z.string(),
+      }),
       reasons: z.object({
         clarity: z.string(),
         convention: z.string(),
@@ -77,6 +108,43 @@ const suggestionSchema = z.object({
     })
   ),
 });
+
+// 历史记录存储 key
+const HISTORY_STORAGE_KEY = 'variable-naming-history';
+const MAX_HISTORY_ITEMS = 50; // 最多保存50条历史
+
+// 历史记录工具函数
+const loadHistory = (): HistoryRecord[] => {
+  try {
+    const stored = localStorage.getItem(HISTORY_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error('Failed to load history:', error);
+    return [];
+  }
+};
+
+const saveHistory = (history: HistoryRecord[]) => {
+  try {
+    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+  } catch (error) {
+    console.error('Failed to save history:', error);
+  }
+};
+
+const addHistoryRecord = (record: Omit<HistoryRecord, 'id' | 'timestamp'>) => {
+  const history = loadHistory();
+  const newRecord: HistoryRecord = {
+    ...record,
+    id: `${Date.now()}-${Math.random().toString(36).substring(7)}`,
+    timestamp: Date.now(),
+  };
+  
+  // 添加到开头，保持最新的在前面
+  const updatedHistory = [newRecord, ...history].slice(0, MAX_HISTORY_ITEMS);
+  saveHistory(updatedHistory);
+  return newRecord;
+};
 
 export const VariableNamingTool: React.FC = () => {
   const { activeConfig, isConfigured } = useAIConfig();
@@ -90,6 +158,10 @@ export const VariableNamingTool: React.FC = () => {
   const [suggestions, setSuggestions] = useState<CandidateSuggestion[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  
+  // 历史记录相关状态
+  const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
+  const [history, setHistory] = useState<HistoryRecord[]>(loadHistory());
 
   const handleGenerate = async () => {
     if (!description.trim()) {
@@ -128,7 +200,11 @@ ${additionalContext ? `额外上下文：${additionalContext}` : ''}
 对于每个建议，请提供：
 1. 变量名
 2. 综合评分 (0-100)
-3. 评分理由，包含三个维度：
+3. 单词拆分（wordBreakdown）：
+   - words: 将变量名拆分成独立的单词数组（例如 getUserName -> ["get", "user", "name"]）
+   - translations: 每个单词对应的中文翻译数组（例如 ["获取", "用户", "名称"]）
+   - explanation: 整体含义的简短解释（例如 "获取用户名称的方法"）
+4. 评分理由，包含三个维度：
    - clarity: 名称的清晰度和可读性
    - convention: 是否符合编程规范和最佳实践
    - meaning: 名称是否准确表达了变量的含义
@@ -145,6 +221,19 @@ ${additionalContext ? `额外上下文：${additionalContext}` : ''}
       // 按分数排序
       const sortedSuggestions = result.suggestions.sort((a, b) => b.score - a.score);
       setSuggestions(sortedSuggestions);
+
+      // 保存到历史记录
+      addHistoryRecord({
+        description,
+        additionalContext,
+        namingStyle,
+        nameLength,
+        useAbbreviation,
+        suggestions: sortedSuggestions,
+      });
+      
+      // 刷新历史记录列表
+      setHistory(loadHistory());
     } catch (err) {
       console.error('AI 生成失败:', err);
       setError(err instanceof Error ? err.message : '生成失败，请检查配置或稍后重试');
@@ -172,6 +261,53 @@ ${additionalContext ? `额外上下文：${additionalContext}` : ''}
     if (score >= 60) return 'info';
     if (score >= 40) return 'warning';
     return 'error';
+  };
+
+  // 历史记录相关函数
+  const handleLoadHistory = (record: HistoryRecord) => {
+    setDescription(record.description);
+    setAdditionalContext(record.additionalContext);
+    setNamingStyle(record.namingStyle);
+    setNameLength(record.nameLength);
+    setUseAbbreviation(record.useAbbreviation);
+    setSuggestions(record.suggestions);
+    setHistoryDrawerOpen(false);
+  };
+
+  const handleDeleteHistory = (id: string) => {
+    const updatedHistory = history.filter(h => h.id !== id);
+    saveHistory(updatedHistory);
+    setHistory(updatedHistory);
+  };
+
+  const handleClearHistory = () => {
+    if (window.confirm('确定要清空所有历史记录吗？')) {
+      saveHistory([]);
+      setHistory([]);
+    }
+  };
+
+  const formatTimestamp = (timestamp: number) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    
+    // 小于1分钟
+    if (diff < 60000) return '刚刚';
+    // 小于1小时
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`;
+    // 小于1天
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`;
+    // 小于7天
+    if (diff < 604800000) return `${Math.floor(diff / 86400000)}天前`;
+    
+    // 超过7天显示具体日期
+    return date.toLocaleDateString('zh-CN', { 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   };
 
   return (
@@ -266,17 +402,29 @@ ${additionalContext ? `额外上下文：${additionalContext}` : ''}
               </Stack>
             </Box>
 
-            {/* 生成按钮 */}
-            <Button
-              fullWidth
-              variant="contained"
-              size="large"
-              onClick={handleGenerate}
-              disabled={loading || !isConfigured}
-              startIcon={loading ? <CircularProgress size={20} /> : <Psychology />}
-            >
-              {loading ? '生成中...' : '生成建议'}
-            </Button>
+            {/* 生成按钮和历史记录按钮 */}
+            <Stack direction="row" spacing={2}>
+              <Button
+                fullWidth
+                variant="contained"
+                size="large"
+                onClick={handleGenerate}
+                disabled={loading || !isConfigured}
+                startIcon={loading ? <CircularProgress size={20} /> : <Psychology />}
+              >
+                {loading ? '生成中...' : '生成建议'}
+              </Button>
+              <Tooltip title="查看历史记录">
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => setHistoryDrawerOpen(true)}
+                  sx={{ minWidth: 'auto', px: 2 }}
+                >
+                  <History />
+                </Button>
+              </Tooltip>
+            </Stack>
 
             {/* 额外上下文 */}
             {suggestions.length > 0 && (
@@ -413,6 +561,27 @@ ${additionalContext ? `额外上下文：${additionalContext}` : ''}
                       {isExpanded && (
                         <Box sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}>
                           <Stack spacing={1}>
+                            {/* 单词拆分翻译 */}
+                            <Box>
+                              <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ fontSize: '0.7rem', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                <Translate sx={{ fontSize: '0.9rem' }} /> 单词拆分
+                              </Typography>
+                              <Box sx={{ mt: 0.5, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                {suggestion.wordBreakdown.words.map((word, idx) => (
+                                  <Chip
+                                    key={idx}
+                                    label={`${word} → ${suggestion.wordBreakdown.translations[idx]}`}
+                                    size="small"
+                                    variant="outlined"
+                                    sx={{ fontSize: '0.75rem', height: 22 }}
+                                  />
+                                ))}
+                              </Box>
+                              <Typography variant="body2" sx={{ fontSize: '0.8rem', mt: 0.5, color: 'text.secondary', fontStyle: 'italic' }}>
+                                {suggestion.wordBreakdown.explanation}
+                              </Typography>
+                            </Box>
+                            
                             <Box>
                               <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ fontSize: '0.7rem' }}>
                                 🔍 清晰度
@@ -448,6 +617,141 @@ ${additionalContext ? `额外上下文：${additionalContext}` : ''}
           )}
         </Box>
       </Box>
+
+      {/* 历史记录抽屉 */}
+      <Drawer
+        anchor="right"
+        open={historyDrawerOpen}
+        onClose={() => setHistoryDrawerOpen(false)}
+        PaperProps={{
+          sx: { width: { xs: '100%', sm: 400 } },
+        }}
+      >
+        <Box sx={{ p: 2 }}>
+          {/* 标题栏 */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="h6">历史记录</Typography>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              {history.length > 0 && (
+                <Tooltip title="清空历史">
+                  <IconButton size="small" onClick={handleClearHistory} color="error">
+                    <Delete fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              )}
+              <IconButton size="small" onClick={() => setHistoryDrawerOpen(false)}>
+                <Close fontSize="small" />
+              </IconButton>
+            </Box>
+          </Box>
+
+          {/* 历史记录列表 */}
+          {history.length === 0 ? (
+            <Box sx={{ textAlign: 'center', py: 8 }}>
+              <History sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} />
+              <Typography color="text.secondary">暂无历史记录</Typography>
+              <Typography variant="body2" color="text.secondary">
+                生成变量名后会自动保存
+              </Typography>
+            </Box>
+          ) : (
+            <List sx={{ 
+              px: 0,
+              '&::-webkit-scrollbar': { width: '8px' },
+              '&::-webkit-scrollbar-track': {
+                backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                  ? 'rgba(255, 255, 255, 0.05)' 
+                  : 'rgba(0, 0, 0, 0.05)',
+                borderRadius: '4px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                  ? 'rgba(255, 255, 255, 0.15)' 
+                  : 'rgba(0, 0, 0, 0.15)',
+                borderRadius: '4px',
+                '&:hover': {
+                  backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                    ? 'rgba(255, 255, 255, 0.25)' 
+                    : 'rgba(0, 0, 0, 0.25)',
+                },
+              },
+            }}>
+              {history.map((record, index) => (
+                <React.Fragment key={record.id}>
+                  <ListItem disablePadding>
+                    <ListItemButton 
+                      onClick={() => handleLoadHistory(record)}
+                      sx={{ 
+                        flexDirection: 'column', 
+                        alignItems: 'flex-start',
+                        py: 1.5,
+                      }}
+                    >
+                      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              fontWeight: 600,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {record.description}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {formatTimestamp(record.timestamp)}
+                          </Typography>
+                        </Box>
+                        <IconButton
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteHistory(record.id);
+                          }}
+                          sx={{ ml: 1 }}
+                        >
+                          <Delete fontSize="small" />
+                        </IconButton>
+                      </Box>
+                      
+                      <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mt: 0.5 }}>
+                        <Chip label={record.namingStyle} size="small" sx={{ fontSize: '0.7rem', height: 20 }} />
+                        <Chip label={`${record.suggestions.length} 个建议`} size="small" sx={{ fontSize: '0.7rem', height: 20 }} />
+                      </Box>
+                      
+                      {record.suggestions.length > 0 && (
+                        <Box sx={{ mt: 1, width: '100%' }}>
+                          <Typography variant="caption" color="text.secondary">
+                            最佳建议:
+                          </Typography>
+                          <Typography 
+                            variant="body2" 
+                            component="code"
+                            sx={{ 
+                              fontFamily: 'monospace',
+                              fontSize: '0.85rem',
+                              display: 'block',
+                              mt: 0.25,
+                              p: 0.5,
+                              bgcolor: 'action.hover',
+                              borderRadius: 0.5,
+                            }}
+                          >
+                            {record.suggestions[0].name}
+                          </Typography>
+                        </Box>
+                      )}
+                    </ListItemButton>
+                  </ListItem>
+                  {index < history.length - 1 && <Divider />}
+                </React.Fragment>
+              ))}
+            </List>
+          )}
+        </Box>
+      </Drawer>
     </Container>
   );
 };

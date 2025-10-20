@@ -174,7 +174,29 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
   const drawer = (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Toolbar />
-      <List sx={{ flexGrow: 1, overflowY: 'auto' }}>
+      <List 
+        sx={{ 
+          flexGrow: 1, 
+          overflowY: 'auto',
+          // 自定义滚动条样式（主题适配）
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: (theme) => theme.palette.mode === 'dark' 
+              ? 'rgba(255, 255, 255, 0.05)' 
+              : 'rgba(0, 0, 0, 0.05)',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: (theme) => theme.palette.primary.main,
+            borderRadius: '4px',
+            '&:hover': {
+              backgroundColor: (theme) => theme.palette.primary.dark,
+            },
+          },
+        }}
+      >
         {/* 首页 */}
         <ListItem disablePadding>
           <ListItemButton

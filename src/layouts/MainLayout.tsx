@@ -178,21 +178,25 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
         sx={{ 
           flexGrow: 1, 
           overflowY: 'auto',
-          // 自定义滚动条样式（主题适配）
+          // 自定义滚动条样式（主题适配 - 低调版）
           '&::-webkit-scrollbar': {
             width: '8px',
           },
           '&::-webkit-scrollbar-track': {
             backgroundColor: (theme) => theme.palette.mode === 'dark' 
-              ? 'rgba(255, 255, 255, 0.05)' 
-              : 'rgba(0, 0, 0, 0.05)',
+              ? 'rgba(255, 255, 255, 0.03)' 
+              : 'rgba(0, 0, 0, 0.03)',
             borderRadius: '4px',
           },
           '&::-webkit-scrollbar-thumb': {
-            backgroundColor: (theme) => theme.palette.primary.main,
+            backgroundColor: (theme) => theme.palette.mode === 'dark' 
+              ? 'rgba(255, 255, 255, 0.15)' 
+              : 'rgba(0, 0, 0, 0.15)',
             borderRadius: '4px',
             '&:hover': {
-              backgroundColor: (theme) => theme.palette.primary.dark,
+              backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                ? 'rgba(255, 255, 255, 0.25)' 
+                : 'rgba(0, 0, 0, 0.25)',
             },
           },
         }}
@@ -671,40 +675,16 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
           </List>
         </Collapse>
       </List>
-
-      {/* 底部工具栏 */}
-      <Box sx={{ borderTop: 1, borderColor: 'divider' }}>
-        <Divider />
-        <Box
-          sx={{
-            p: 1.5,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Tooltip title="设置" placement="top">
-            <IconButton
-              onClick={() => setSettingsOpen(true)}
-              sx={{
-                color: 'text.secondary',
-                '&:hover': {
-                  color: 'primary.main',
-                  backgroundColor: 'action.hover',
-                },
-              }}
-            >
-              <Settings />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </Box>
     </Box>
   );
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Header onToggleTheme={onToggleTheme} onToggleSidebar={handleDrawerToggle} />
+      <Header 
+        onToggleTheme={onToggleTheme} 
+        onToggleSidebar={handleDrawerToggle}
+        onOpenSettings={() => setSettingsOpen(true)}
+      />
       <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       
       <Box

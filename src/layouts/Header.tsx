@@ -15,15 +15,17 @@ import {
   Menu as MenuIcon,
   Search as SearchIcon,
   GitHub as GitHubIcon,
+  Settings as SettingsIcon,
 } from '@mui/icons-material';
 import { SearchDialog } from '../components/SearchDialog';
 
 interface HeaderProps {
   onToggleTheme: () => void;
   onToggleSidebar: () => void;
+  onOpenSettings: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onToggleTheme, onToggleSidebar }) => {
+export const Header: React.FC<HeaderProps> = ({ onToggleTheme, onToggleSidebar, onOpenSettings }) => {
   const theme = useTheme();
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -156,7 +158,31 @@ export const Header: React.FC<HeaderProps> = ({ onToggleTheme, onToggleSidebar }
               <GitHubIcon />
             </IconButton>
 
-            <IconButton onClick={onToggleTheme} color="inherit" aria-label="toggle theme">
+            {/* 设置按钮 */}
+            <IconButton 
+              onClick={onOpenSettings} 
+              color="inherit" 
+              sx={{ 
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                },
+              }}
+              aria-label="settings"
+            >
+              <SettingsIcon />
+            </IconButton>
+
+            {/* 主题切换 */}
+            <IconButton 
+              onClick={onToggleTheme} 
+              color="inherit" 
+              sx={{ 
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                },
+              }}
+              aria-label="toggle theme"
+            >
               {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
             </IconButton>
           </Box>

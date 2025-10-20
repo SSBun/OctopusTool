@@ -284,13 +284,13 @@ export const ALL_TOOLS: Tool[] = [
     category: '设计工具',
   },
   
-  // === 颜色工具 Phase 3 (计划中) ===
+  // === 颜色工具 Phase 3 ===
   {
     icon: <PhotoLibrary sx={{ fontSize: 40 }} />,
     title: '颜色提取器',
     description: '从图片提取主色调和调色板',
     path: '/tools/design/color-extractor',
-    status: '计划中',
+    status: '可用',
     category: '设计工具',
   },
   {
@@ -298,7 +298,7 @@ export const ALL_TOOLS: Tool[] = [
     title: '明暗色生成器',
     description: '生成颜色的 Tints 和 Shades 变体',
     path: '/tools/design/tint-shade-generator',
-    status: '计划中',
+    status: '可用',
     category: '设计工具',
   },
   {
@@ -306,7 +306,7 @@ export const ALL_TOOLS: Tool[] = [
     title: '颜色命名工具',
     description: '根据色值查找颜色名称和描述',
     path: '/tools/design/color-namer',
-    status: '计划中',
+    status: '可用',
     category: '设计工具',
   },
   {

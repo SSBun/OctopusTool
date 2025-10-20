@@ -30,6 +30,9 @@ import { PaletteGenerator } from './pages/design/PaletteGenerator';
 import { GradientGenerator } from './pages/design/GradientGenerator';
 import { ContrastChecker } from './pages/design/ContrastChecker';
 import { ColorSwatches } from './pages/design/ColorSwatches';
+import { TintShadeGenerator } from './pages/design/TintShadeGenerator';
+import { ColorNamer } from './pages/design/ColorNamer';
+import { ColorExtractor } from './pages/design/ColorExtractor';
 import { UnitTool } from './pages/tools/data/UnitTool';
 import { QrBarcodeTool } from './pages/tools/data/QrBarcodeTool';
 import { TimeTools } from './pages/tools/data/TimeTools';
@@ -184,6 +187,9 @@ function App() {
             <Route path="tools/design/gradient-generator" element={<GradientGenerator />} />
             <Route path="tools/design/contrast-checker" element={<ContrastChecker />} />
             <Route path="tools/design/color-swatches" element={<ColorSwatches />} />
+            <Route path="tools/design/tint-shade-generator" element={<TintShadeGenerator />} />
+            <Route path="tools/design/color-namer" element={<ColorNamer />} />
+            <Route path="tools/design/color-extractor" element={<ColorExtractor />} />
             <Route path="tools/data/unit-converter" element={<UnitTool />} />
             <Route path="tools/data/qrbarcode" element={<QrBarcodeTool />} />
             {/* 网络工具 */}

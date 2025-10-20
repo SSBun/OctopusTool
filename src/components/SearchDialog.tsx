@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -27,6 +27,7 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ open, onClose }) => 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // 模糊搜索（只显示可用的工具）
   const searchResults = useMemo(() => {
@@ -48,11 +49,15 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ open, onClose }) => 
     setSelectedIndex(0);
   }, [searchQuery]);
 
-  // 重置搜索
+  // 重置搜索并自动聚焦
   useEffect(() => {
     if (open) {
       setSearchQuery('');
       setSelectedIndex(0);
+      // 延迟聚焦以确保对话框完全打开
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
     }
   }, [open]);
 
@@ -94,6 +99,7 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ open, onClose }) => 
         <TextField
           fullWidth
           autoFocus
+          inputRef={inputRef}
           placeholder="搜索工具... (支持工具名称、描述、分类)"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -121,7 +127,30 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ open, onClose }) => 
         <Divider />
 
         {searchResults.length > 0 ? (
-          <List sx={{ maxHeight: 400, overflow: 'auto', py: 1 }}>
+          <List 
+            sx={{ 
+              maxHeight: 400, 
+              overflowY: 'auto', 
+              py: 1,
+              // 自定义滚动条样式（主题适配）
+              '&::-webkit-scrollbar': {
+                width: '8px',
+              },
+              '&::-webkit-scrollbar-track': {
+                backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                  ? 'rgba(255, 255, 255, 0.05)' 
+                  : 'rgba(0, 0, 0, 0.05)',
+                borderRadius: '4px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: (theme) => theme.palette.primary.main,
+                borderRadius: '4px',
+                '&:hover': {
+                  backgroundColor: (theme) => theme.palette.primary.dark,
+                },
+              },
+            }}
+          >
             {searchResults.map((tool, index) => (
               <ListItem key={tool.path} disablePadding>
                 <ListItemButton

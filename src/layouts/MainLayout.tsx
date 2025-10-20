@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Drawer,
@@ -46,6 +46,7 @@ import {
   Palette,
   SwapHoriz as SwapHorizIcon,
   Settings,
+  Storage,
 } from '@mui/icons-material';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Header } from './Header';
@@ -64,49 +65,126 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [developmentOpen, setDevelopmentOpen] = useState(false);
-  const [securityOpen, setSecurityOpen] = useState(false);
-  const [dataOpen, setDataOpen] = useState(false);
-  const [networkOpen, setNetworkOpen] = useState(false);
-  const [textOpen, setTextOpen] = useState(false);
-  const [documentOpen, setDocumentOpen] = useState(false);
-  const [designOpen, setDesignOpen] = useState(false);
-  const [mediaOpen, setMediaOpen] = useState(false);
+
+  // 从 localStorage 读取初始状态
+  const getStoredState = (key: string, defaultValue: boolean = false): boolean => {
+    try {
+      const stored = localStorage.getItem(`nav-${key}`);
+      return stored !== null ? JSON.parse(stored) : defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  };
+
+  const [developmentOpen, setDevelopmentOpen] = useState(() => getStoredState('development'));
+  const [databaseOpen, setDatabaseOpen] = useState(() => getStoredState('database'));
+  const [securityOpen, setSecurityOpen] = useState(() => getStoredState('security'));
+  const [dataOpen, setDataOpen] = useState(() => getStoredState('data'));
+  const [networkOpen, setNetworkOpen] = useState(() => getStoredState('network'));
+  const [textOpen, setTextOpen] = useState(() => getStoredState('text'));
+  const [documentOpen, setDocumentOpen] = useState(() => getStoredState('document'));
+  const [designOpen, setDesignOpen] = useState(() => getStoredState('design'));
+  const [mediaOpen, setMediaOpen] = useState(() => getStoredState('media'));
+
+  // 保存状态到 localStorage
+  const saveState = (key: string, value: boolean) => {
+    try {
+      localStorage.setItem(`nav-${key}`, JSON.stringify(value));
+    } catch (error) {
+      console.error('Failed to save navigation state:', error);
+    }
+  };
+
+  // 根据当前路由自动展开相应分类
+  useEffect(() => {
+    const path = location.pathname;
+    
+    if (path.startsWith('/tools/json') || path.startsWith('/tools/dev/format')) {
+      setDevelopmentOpen(true);
+      saveState('development', true);
+    } else if (path.startsWith('/tools/database/')) {
+      setDatabaseOpen(true);
+      saveState('database', true);
+    } else if (path.startsWith('/tools/crypto') || path.startsWith('/tools/encoding')) {
+      setSecurityOpen(true);
+      saveState('security', true);
+    } else if (path.startsWith('/tools/data/')) {
+      setDataOpen(true);
+      saveState('data', true);
+    } else if (path.startsWith('/tools/network/')) {
+      setNetworkOpen(true);
+      saveState('network', true);
+    } else if (path.startsWith('/tools/text/')) {
+      setTextOpen(true);
+      saveState('text', true);
+    } else if (path.startsWith('/tools/pdf') || path.startsWith('/tools/document/')) {
+      setDocumentOpen(true);
+      saveState('document', true);
+    } else if (path.startsWith('/tools/design/')) {
+      setDesignOpen(true);
+      saveState('design', true);
+    } else if (path.startsWith('/media/')) {
+      setMediaOpen(true);
+      saveState('media', true);
+    }
+  }, [location.pathname]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   const handleDevelopmentToggle = () => {
-    setDevelopmentOpen(!developmentOpen);
+    const newState = !developmentOpen;
+    setDevelopmentOpen(newState);
+    saveState('development', newState);
+  };
+
+  const handleDatabaseToggle = () => {
+    const newState = !databaseOpen;
+    setDatabaseOpen(newState);
+    saveState('database', newState);
   };
 
   const handleSecurityToggle = () => {
-    setSecurityOpen(!securityOpen);
+    const newState = !securityOpen;
+    setSecurityOpen(newState);
+    saveState('security', newState);
   };
 
   const handleDataToggle = () => {
-    setDataOpen(!dataOpen);
+    const newState = !dataOpen;
+    setDataOpen(newState);
+    saveState('data', newState);
   };
 
   const handleNetworkToggle = () => {
-    setNetworkOpen(!networkOpen);
+    const newState = !networkOpen;
+    setNetworkOpen(newState);
+    saveState('network', newState);
   };
 
   const handleTextToggle = () => {
-    setTextOpen(!textOpen);
+    const newState = !textOpen;
+    setTextOpen(newState);
+    saveState('text', newState);
   };
 
   const handleDocumentToggle = () => {
-    setDocumentOpen(!documentOpen);
+    const newState = !documentOpen;
+    setDocumentOpen(newState);
+    saveState('document', newState);
   };
 
   const handleDesignToggle = () => {
-    setDesignOpen(!designOpen);
+    const newState = !designOpen;
+    setDesignOpen(newState);
+    saveState('design', newState);
   };
 
   const handleMediaToggle = () => {
-    setMediaOpen(!mediaOpen);
+    const newState = !mediaOpen;
+    setMediaOpen(newState);
+    saveState('media', newState);
   };
 
   const handleNavigation = (path: string) => {
@@ -120,6 +198,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
   const developmentCategories = [
     { label: 'JSON 工具', icon: <Code />, path: '/tools/json' },
     { label: '代码格式化', icon: <DataObject />, path: '/tools/dev/format' },
+    { label: '数据库工具', icon: <Storage />, path: '/tools/database' },
   ];
 
   // 加密安全

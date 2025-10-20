@@ -8,7 +8,6 @@ import {
   Box,
   Typography,
   Paper,
-  TextField,
   Grid,
   Button,
   Slider,
@@ -31,6 +30,7 @@ import {
   Refresh,
 } from '@mui/icons-material';
 import { ToolDetailHeader } from '../../components/ToolDetailHeader';
+import { ColorPicker } from '../../components/ColorPicker';
 
 interface GradientStop {
   color: string;
@@ -253,28 +253,10 @@ export const GradientGenerator: React.FC = () => {
                   )}
                 </Box>
 
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="颜色"
+                <ColorPicker
+                  label={`颜色 ${index + 1}`}
                   value={stop.color}
-                  onChange={(e) => updateStop(index, 'color', e.target.value)}
-                  sx={{ mb: 1 }}
-                  InputProps={{
-                    startAdornment: (
-                      <Box
-                        sx={{
-                          width: 24,
-                          height: 24,
-                          backgroundColor: stop.color,
-                          borderRadius: 1,
-                          border: '1px solid',
-                          borderColor: 'divider',
-                          mr: 1,
-                        }}
-                      />
-                    ),
-                  }}
+                  onChange={(color) => updateStop(index, 'color', color)}
                 />
 
                 <Typography variant="caption" gutterBottom>

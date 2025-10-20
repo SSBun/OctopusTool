@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-Container,
+  Container,
   Typography,
   Box,
   TextField,
@@ -10,6 +10,7 @@ Container,
 } from '@mui/material';
 import { ToolDetailHeader } from '../../components/ToolDetailHeader';
 import { ColorLens, Clear, CheckCircle } from '@mui/icons-material';
+import { ColorPicker } from '../../components/ColorPicker';
 
 interface ColorValues {
   hex: string;
@@ -157,26 +158,12 @@ export const ColorTool: React.FC = () => {
             <Typography variant="h6" gutterBottom fontWeight={600}>
               HEX 颜色
             </Typography>
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
-              <TextField
-                fullWidth
-                label="HEX 颜色值"
-                value={hexInput}
-                onChange={(e) => setHexInput(e.target.value)}
-                placeholder="#3b82f6"
-                sx={{ '& .MuiOutlinedInput-root': { fontFamily: 'monospace' } }}
-              />
-              <Box
-                sx={{
-                  width: 60,
-                  height: 56,
-                  bgcolor: hexInput,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                  borderRadius: 1,
-                }}
-              />
-            </Box>
+            <ColorPicker
+              label="HEX 颜色值"
+              value={hexInput}
+              onChange={setHexInput}
+              helperText="点击色块打开颜色选择器"
+            />
             <Button
               variant="contained"
               startIcon={<ColorLens />}

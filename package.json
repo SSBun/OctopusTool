@@ -45,6 +45,7 @@
     "react-router-dom": "^7.9.4",
     "react-virtualized-auto-sizer": "^1.0.26",
     "react-window": "^2.2.1",
+    "sql-formatter": "^15.6.10",
     "zod": "^4.1.12"
   },
   "devDependencies": {

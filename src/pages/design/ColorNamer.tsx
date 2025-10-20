@@ -8,7 +8,6 @@ import {
   Box,
   Typography,
   Paper,
-  TextField,
   Grid,
   Chip,
   Snackbar,
@@ -21,6 +20,7 @@ import {
 import { CheckCircle, ContentCopy } from '@mui/icons-material';
 import chroma from 'chroma-js';
 import { ToolDetailHeader } from '../../components/ToolDetailHeader';
+import { ColorPicker } from '../../components/ColorPicker';
 
 // 颜色名称数据库（常见颜色）
 const COLOR_NAMES = [
@@ -200,28 +200,11 @@ export const ColorNamer: React.FC = () => {
               颜色输入
             </Typography>
 
-            <TextField
-              fullWidth
-              label="HEX 颜色值"
+            <ColorPicker
+              label="颜色输入"
               value={inputColor}
-              onChange={(e) => setInputColor(e.target.value)}
-              placeholder="#3f51b5"
-              sx={{ mb: 3 }}
-              InputProps={{
-                startAdornment: (
-                  <Box
-                    sx={{
-                      width: 32,
-                      height: 32,
-                      backgroundColor: inputColor,
-                      borderRadius: 1,
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      mr: 1,
-                    }}
-                  />
-                ),
-              }}
+              onChange={setInputColor}
+              helperText="点击色块打开颜色选择器，查找颜色名称"
             />
 
             {/* 颜色预览 */}
@@ -236,6 +219,7 @@ export const ColorNamer: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                mt: 2,
               }}
             >
               <Typography

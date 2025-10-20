@@ -8,7 +8,6 @@ import {
   Box,
   Typography,
   Paper,
-  TextField,
   Grid,
   Button,
   ButtonGroup,
@@ -22,6 +21,7 @@ import {
 import { ContentCopy, CheckCircle, Refresh } from '@mui/icons-material';
 import chroma from 'chroma-js';
 import { ToolDetailHeader } from '../../components/ToolDetailHeader';
+import { ColorPicker } from '../../components/ColorPicker';
 
 type PaletteMode = 'monochromatic' | 'complementary' | 'analogous' | 'triadic' | 'split-complementary' | 'tetradic';
 
@@ -185,22 +185,23 @@ export const PaletteGenerator: React.FC = () => {
             
             {/* 颜色输入 */}
             <Box sx={{ mb: 3 }}>
-              <TextField
-                fullWidth
-                label="HEX 颜色值"
+              <ColorPicker
+                label="基础颜色"
                 value={baseColor}
-                onChange={(e) => setBaseColor(e.target.value)}
-                placeholder="#3f51b5"
-                sx={{ mb: 2 }}
+                onChange={setBaseColor}
+                helperText="点击色块打开颜色选择器，自动生成配色方案"
               />
+              
+              {/* 大色块预览 */}
               <Box
                 sx={{
                   width: '100%',
-                  height: 100,
+                  height: 80,
                   backgroundColor: baseColor,
                   borderRadius: 2,
                   border: '1px solid',
                   borderColor: 'divider',
+                  mt: 2,
                 }}
               />
             </Box>

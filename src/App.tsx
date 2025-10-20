@@ -44,6 +44,13 @@ import { DataConvertTools } from './pages/tools/data/ConvertTools';
 import { ColorTools as DesignColorTools } from './pages/design/ColorTools';
 import { CssTools } from './pages/design/CssTools';
 import { CodeFormatTools } from './pages/tools/dev/CodeFormatTools';
+import { DatabaseTools } from './pages/tools/DatabaseTools';
+import { SqlFormatter } from './pages/tools/dev/SqlFormatter';
+import { AiSqlGenerator } from './pages/tools/database/AiSqlGenerator';
+import { SqlConverter } from './pages/tools/database/SqlConverter';
+import { TableDesigner } from './pages/tools/database/TableDesigner';
+import { SqlInjectionChecker } from './pages/tools/database/SqlInjectionChecker';
+import { SqlOptimizer } from './pages/tools/database/SqlOptimizer';
 import { NetworkTools } from './pages/tools/NetworkTools';
 import { 
   IpTool, 
@@ -125,6 +132,7 @@ import { FavoritesPage } from './pages/FavoritesPage';
 function App() {
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     const saved = localStorage.getItem('themeMode');
+    // 默认使用夜间模式（深色主题）
     return (saved as ThemeMode) || 'dark';
   });
 
@@ -159,6 +167,14 @@ function App() {
             <Route path="tools/json/validator" element={<JsonValidator />} />
             {/* 代码格式化 */}
             <Route path="tools/dev/format" element={<CodeFormatTools />} />
+            {/* 数据库工具 */}
+            <Route path="tools/database" element={<DatabaseTools />} />
+            <Route path="tools/database/sql-formatter" element={<SqlFormatter />} />
+            <Route path="tools/database/ai-sql-generator" element={<AiSqlGenerator />} />
+            <Route path="tools/database/sql-converter" element={<SqlConverter />} />
+            <Route path="tools/database/table-designer" element={<TableDesigner />} />
+            <Route path="tools/database/sql-injection-checker" element={<SqlInjectionChecker />} />
+            <Route path="tools/database/sql-optimizer" element={<SqlOptimizer />} />
             {/* 编码转换工具 */}
             <Route path="tools/encoding" element={<EncodingTools />} />
             <Route path="tools/encoding/base64" element={<Base64Tool />} />

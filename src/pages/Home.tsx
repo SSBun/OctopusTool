@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Container,
   Typography,
@@ -7,10 +7,48 @@ import {
   CardContent,
   Grid,
   Chip,
+  Stack,
+  Divider,
 } from '@mui/material';
-import { Code, Speed, Security } from '@mui/icons-material';
+import { 
+  Code, 
+  Speed, 
+  Security, 
+  CheckCircle, 
+  Schedule,
+  Category,
+  Build,
+} from '@mui/icons-material';
+import { ALL_TOOLS } from '../data/allTools';
 
 export const Home: React.FC = () => {
+  // 统计工具数量
+  const toolStats = useMemo(() => {
+    const total = ALL_TOOLS.length;
+    const available = ALL_TOOLS.filter(tool => tool.status === '可用').length;
+    const planned = ALL_TOOLS.filter(tool => tool.status === '计划中').length;
+    
+    // 按分类统计
+    const categories = new Set(ALL_TOOLS.map(tool => tool.category));
+    const categoryCount = categories.size;
+    
+    // 统计各分类的工具数量
+    const categoryStats = Array.from(categories).map(category => ({
+      name: category,
+      count: ALL_TOOLS.filter(tool => tool.category === category).length,
+      available: ALL_TOOLS.filter(tool => tool.category === category && tool.status === '可用').length,
+    })).sort((a, b) => b.count - a.count);
+    
+    return {
+      total,
+      available,
+      planned,
+      categoryCount,
+      categoryStats,
+      completionRate: Math.round((available / total) * 100),
+    };
+  }, []);
+
   const features = [
     {
       icon: <Code sx={{ fontSize: 40 }} />,
@@ -47,7 +85,157 @@ export const Home: React.FC = () => {
         </Box>
       </Box>
 
-      <Grid container spacing={3} sx={{ mt: 4 }}>
+      {/* 工具数量统计 */}
+      <Grid container spacing={2} sx={{ mb: 4 }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card 
+            sx={{ 
+              textAlign: 'center', 
+              p: 2,
+              background: (theme) => 
+                theme.palette.mode === 'dark' 
+                  ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                  : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: 'white',
+            }}
+          >
+            <CardContent>
+              <Build sx={{ fontSize: 40, mb: 1 }} />
+              <Typography variant="h3" fontWeight={700}>
+                {toolStats.total}
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                工具总数
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        
+        <Grid item xs={12} sm={6} md={3}>
+          <Card 
+            sx={{ 
+              textAlign: 'center', 
+              p: 2,
+              background: (theme) => 
+                theme.palette.mode === 'dark' 
+                  ? 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+                  : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+              color: 'white',
+            }}
+          >
+            <CardContent>
+              <CheckCircle sx={{ fontSize: 40, mb: 1 }} />
+              <Typography variant="h3" fontWeight={700}>
+                {toolStats.available}
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                可用工具
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        
+        <Grid item xs={12} sm={6} md={3}>
+          <Card 
+            sx={{ 
+              textAlign: 'center', 
+              p: 2,
+              background: (theme) => 
+                theme.palette.mode === 'dark' 
+                  ? 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+                  : 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+              color: 'white',
+            }}
+          >
+            <CardContent>
+              <Category sx={{ fontSize: 40, mb: 1 }} />
+              <Typography variant="h3" fontWeight={700}>
+                {toolStats.categoryCount}
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                工具分类
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        
+        <Grid item xs={12} sm={6} md={3}>
+          <Card 
+            sx={{ 
+              textAlign: 'center', 
+              p: 2,
+              background: (theme) => 
+                theme.palette.mode === 'dark' 
+                  ? 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+                  : 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+              color: 'white',
+            }}
+          >
+            <CardContent>
+              <Schedule sx={{ fontSize: 40, mb: 1 }} />
+              <Typography variant="h3" fontWeight={700}>
+                {toolStats.completionRate}%
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                完成进度
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* 分类统计 */}
+      <Box 
+        sx={{ 
+          mb: 4,
+          p: 3, 
+          bgcolor: 'background.paper', 
+          borderRadius: 3,
+          border: (theme) => `1px solid ${theme.palette.divider}`,
+        }}
+      >
+        <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mb: 2 }}>
+          📊 分类统计
+        </Typography>
+        <Grid container spacing={2}>
+          {toolStats.categoryStats.map((cat, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Box 
+                sx={{ 
+                  p: 2, 
+                  borderRadius: 2,
+                  bgcolor: 'action.hover',
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    bgcolor: 'action.selected',
+                    transform: 'translateX(4px)',
+                  },
+                }}
+              >
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                  <Typography variant="body2" fontWeight={500}>
+                    {cat.name}
+                  </Typography>
+                  <Stack direction="row" spacing={1}>
+                    <Chip 
+                      label={`${cat.available}/${cat.count}`} 
+                      size="small" 
+                      color="primary"
+                      sx={{ fontWeight: 600 }}
+                    />
+                  </Stack>
+                </Stack>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+        <Divider sx={{ my: 2 }} />
+        <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+          💡 共 {toolStats.categoryCount} 个分类，{toolStats.available} 个工具可用，{toolStats.planned} 个工具计划中
+        </Typography>
+      </Box>
+
+      <Grid container spacing={3} sx={{ mt: 2 }}>
         {features.map((feature, index) => (
           <Grid item xs={12} md={4} key={index}>
             <Card 

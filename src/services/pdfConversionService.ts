@@ -112,7 +112,7 @@ export async function mergePdfs(pdfFiles: File[]): Promise<Blob> {
   }
 
   const pdfBytes = await mergedPdf.save();
-  return new Blob([pdfBytes], { type: 'application/pdf' });
+  return new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
 }
 
 /**
@@ -143,7 +143,7 @@ export async function splitPdf(
     pages.forEach((page) => newPdf.addPage(page));
 
     const pdfBytes = await newPdf.save();
-    results.push(new Blob([pdfBytes], { type: 'application/pdf' }));
+    results.push(new Blob([pdfBytes as BlobPart], { type: 'application/pdf' }));
   }
 
   return results;
@@ -167,7 +167,7 @@ export async function compressPdf(
     addDefaultPage: false,
   });
 
-  return new Blob([pdfBytes], { type: 'application/pdf' });
+  return new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
 }
 
 /**

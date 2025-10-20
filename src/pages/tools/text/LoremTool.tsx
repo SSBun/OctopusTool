@@ -40,7 +40,7 @@ export const LoremTool: React.FC = () => {
 
   const generateSentence = () => {
     const wordCount = Math.floor(Math.random() * 10) + 5;
-    let sentence = [];
+    const sentence = [];
     for (let i = 0; i < wordCount; i++) {
       sentence.push(generateWord());
     }
@@ -49,7 +49,7 @@ export const LoremTool: React.FC = () => {
 
   const generateParagraph = () => {
     const sentenceCount = Math.floor(Math.random() * 4) + 3;
-    let sentences = [];
+    const sentences = [];
     for (let i = 0; i < sentenceCount; i++) {
       sentences.push(generateSentence());
     }

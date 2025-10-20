@@ -106,7 +106,7 @@ export const PdfCompressTool: React.FC = () => {
       const compressedPdfBytes = await pdfDoc.save();
       setCompressedSize(compressedPdfBytes.length);
       
-      const blob = new Blob([compressedPdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([compressedPdfBytes as BlobPart], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       setPdfUrl(url);
 

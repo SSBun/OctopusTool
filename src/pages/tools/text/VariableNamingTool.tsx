@@ -29,6 +29,7 @@ import {
   TrendingUp,
   Code,
   Psychology,
+  ExpandMore,
 } from '@mui/icons-material';
 import { useAIConfig } from '../../../contexts/AIConfigContext';
 import { createActiveAIService } from '../../../services/aiService';
@@ -88,6 +89,7 @@ export const VariableNamingTool: React.FC = () => {
   const [error, setError] = useState('');
   const [suggestions, setSuggestions] = useState<CandidateSuggestion[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const handleGenerate = async () => {
     if (!description.trim()) {
@@ -340,65 +342,108 @@ ${additionalContext ? `额外上下文：${additionalContext}` : ''}
                 <Chip icon={<TrendingUp />} label="按评分排序" size="small" />
               </Box>
 
-              {suggestions.map((suggestion, index) => (
-                <Card key={index} variant="outlined">
-                  <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                      <Box sx={{ flex: 1 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                          <Typography variant="h6" component="code" sx={{ fontFamily: 'monospace', fontSize: '1.1rem' }}>
-                            {suggestion.name}
-                          </Typography>
-                          {index === 0 && <Chip label="推荐" color="success" size="small" />}
+              {suggestions.map((suggestion, index) => {
+                const isExpanded = expandedIndex === index;
+                return (
+                  <Card key={index} variant="outlined">
+                    <CardContent sx={{ py: 1.5, px: 2, '&:last-child': { pb: 1.5 } }}>
+                      {/* 主要信息 */}
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+                        {/* 左侧：变量名和评分 */}
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                            <Typography 
+                              variant="h6" 
+                              component="code" 
+                              sx={{ 
+                                fontFamily: 'monospace', 
+                                fontSize: '1rem',
+                                wordBreak: 'break-all',
+                              }}
+                            >
+                              {suggestion.name}
+                            </Typography>
+                            {index === 0 && <Chip label="推荐" color="success" size="small" />}
+                          </Box>
+                          
+                          {/* 评分条 - 更紧凑 */}
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Chip
+                              label={`${suggestion.score}`}
+                              color={getScoreColor(suggestion.score) as 'success' | 'info' | 'warning' | 'error'}
+                              size="small"
+                              sx={{ height: 20, fontSize: '0.7rem' }}
+                            />
+                            <LinearProgress
+                              variant="determinate"
+                              value={suggestion.score}
+                              sx={{ flex: 1, height: 4, borderRadius: 2 }}
+                              color={getScoreColor(suggestion.score) as 'success' | 'info' | 'warning' | 'error'}
+                            />
+                          </Box>
                         </Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Chip
-                            label={`评分: ${suggestion.score}`}
-                            color={getScoreColor(suggestion.score) as 'success' | 'info' | 'warning' | 'error'}
-                            size="small"
-                          />
-                          <LinearProgress
-                            variant="determinate"
-                            value={suggestion.score}
-                            sx={{ flex: 1, height: 6, borderRadius: 3 }}
-                            color={getScoreColor(suggestion.score) as 'success' | 'info' | 'warning' | 'error'}
-                          />
-                        </Box>
-                      </Box>
-                      <Tooltip title={copiedIndex === index ? '已复制!' : '复制'}>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleCopy(suggestion.name, index)}
-                          color={copiedIndex === index ? 'success' : 'default'}
-                        >
-                          {copiedIndex === index ? <CheckCircle /> : <ContentCopy />}
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
 
-                    <Stack spacing={1.5}>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary" fontWeight={600}>
-                          🔍 清晰度
-                        </Typography>
-                        <Typography variant="body2">{suggestion.reasons.clarity}</Typography>
+                        {/* 右侧：操作按钮 */}
+                        <Box sx={{ display: 'flex', gap: 0.5 }}>
+                          <Tooltip title={copiedIndex === index ? '已复制!' : '复制'}>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleCopy(suggestion.name, index)}
+                              color={copiedIndex === index ? 'success' : 'default'}
+                            >
+                              {copiedIndex === index ? <CheckCircle fontSize="small" /> : <ContentCopy fontSize="small" />}
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={isExpanded ? '收起' : '查看理由'}>
+                            <IconButton
+                              size="small"
+                              onClick={() => setExpandedIndex(isExpanded ? null : index)}
+                              sx={{
+                                transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                                transition: 'transform 0.3s',
+                              }}
+                            >
+                              <ExpandMore fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
                       </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary" fontWeight={600}>
-                          📐 规范性
-                        </Typography>
-                        <Typography variant="body2">{suggestion.reasons.convention}</Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary" fontWeight={600}>
-                          💡 语义性
-                        </Typography>
-                        <Typography variant="body2">{suggestion.reasons.meaning}</Typography>
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              ))}
+
+                      {/* 评分理由 - 可折叠 */}
+                      {isExpanded && (
+                        <Box sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}>
+                          <Stack spacing={1}>
+                            <Box>
+                              <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ fontSize: '0.7rem' }}>
+                                🔍 清晰度
+                              </Typography>
+                              <Typography variant="body2" sx={{ fontSize: '0.85rem', mt: 0.25 }}>
+                                {suggestion.reasons.clarity}
+                              </Typography>
+                            </Box>
+                            <Box>
+                              <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ fontSize: '0.7rem' }}>
+                                📐 规范性
+                              </Typography>
+                              <Typography variant="body2" sx={{ fontSize: '0.85rem', mt: 0.25 }}>
+                                {suggestion.reasons.convention}
+                              </Typography>
+                            </Box>
+                            <Box>
+                              <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ fontSize: '0.7rem' }}>
+                                💡 语义性
+                              </Typography>
+                              <Typography variant="body2" sx={{ fontSize: '0.85rem', mt: 0.25 }}>
+                                {suggestion.reasons.meaning}
+                              </Typography>
+                            </Box>
+                          </Stack>
+                        </Box>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </Stack>
           )}
         </Box>

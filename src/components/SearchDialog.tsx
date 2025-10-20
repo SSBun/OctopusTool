@@ -61,17 +61,24 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ open, onClose }) => 
     }
   }, [open]);
 
-  // 键盘导航
+  // 键盘导航（支持箭头键和 Emacs 快捷键）
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown') {
+    // 下移：↓ 或 Ctrl+N
+    if (e.key === 'ArrowDown' || (e.ctrlKey && e.key === 'n')) {
       e.preventDefault();
       setSelectedIndex((prev) => Math.min(prev + 1, searchResults.length - 1));
-    } else if (e.key === 'ArrowUp') {
+    } 
+    // 上移：↑ 或 Ctrl+P
+    else if (e.key === 'ArrowUp' || (e.ctrlKey && e.key === 'p')) {
       e.preventDefault();
       setSelectedIndex((prev) => Math.max(prev - 1, 0));
-    } else if (e.key === 'Enter' && searchResults[selectedIndex]) {
+    } 
+    // 选择：Enter
+    else if (e.key === 'Enter' && searchResults[selectedIndex]) {
       handleNavigate(searchResults[selectedIndex].path);
-    } else if (e.key === 'Escape') {
+    } 
+    // 关闭：Esc
+    else if (e.key === 'Escape') {
       onClose();
     }
   };
@@ -214,7 +221,8 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({ open, onClose }) => 
 
         <Box sx={{ p: 1.5, bgcolor: 'background.default', display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <Typography variant="caption" color="text.secondary">
-            <kbd style={{ padding: '2px 6px', borderRadius: '3px', background: 'rgba(0,0,0,0.1)' }}>↑↓</kbd> 导航
+            <kbd style={{ padding: '2px 6px', borderRadius: '3px', background: 'rgba(0,0,0,0.1)' }}>↑↓</kbd> 或 
+            <kbd style={{ padding: '2px 6px', borderRadius: '3px', background: 'rgba(0,0,0,0.1)', marginLeft: '4px' }}>^P/N</kbd> 导航
           </Typography>
           <Typography variant="caption" color="text.secondary">
             <kbd style={{ padding: '2px 6px', borderRadius: '3px', background: 'rgba(0,0,0,0.1)' }}>Enter</kbd> 选择

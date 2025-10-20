@@ -11,6 +11,9 @@ import {
   useMediaQuery,
   useTheme,
   Collapse,
+  IconButton,
+  Tooltip,
+  Divider,
 } from '@mui/material';
 import {
   Home,
@@ -42,9 +45,11 @@ import {
   Sync,
   Palette,
   SwapHoriz as SwapHorizIcon,
+  Settings,
 } from '@mui/icons-material';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Header } from './Header';
+import { SettingsDialog } from '../components/SettingsDialog';
 
 const drawerWidth = 240;
 
@@ -58,6 +63,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
   const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [developmentOpen, setDevelopmentOpen] = useState(false);
   const [securityOpen, setSecurityOpen] = useState(false);
   const [dataOpen, setDataOpen] = useState(false);
@@ -166,9 +172,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
   ];
 
   const drawer = (
-    <div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Toolbar />
-      <List>
+      <List sx={{ flexGrow: 1, overflowY: 'auto' }}>
         {/* 首页 */}
         <ListItem disablePadding>
           <ListItemButton
@@ -643,12 +649,41 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
           </List>
         </Collapse>
       </List>
-    </div>
+
+      {/* 底部工具栏 */}
+      <Box sx={{ borderTop: 1, borderColor: 'divider' }}>
+        <Divider />
+        <Box
+          sx={{
+            p: 1.5,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Tooltip title="设置" placement="top">
+            <IconButton
+              onClick={() => setSettingsOpen(true)}
+              sx={{
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'primary.main',
+                  backgroundColor: 'action.hover',
+                },
+              }}
+            >
+              <Settings />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+    </Box>
   );
 
   return (
     <Box sx={{ display: 'flex' }}>
       <Header onToggleTheme={onToggleTheme} onToggleSidebar={handleDrawerToggle} />
+      <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       
       <Box
         component="nav"

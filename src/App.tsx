@@ -77,6 +77,7 @@ import {
 } from './pages/tools/text';
 import { MarkdownEditor } from './pages/tools/text/MarkdownEditor';
 import { EmojiTool } from './pages/tools/text/EmojiTool';
+import { VariableNamingTool } from './pages/tools/text/VariableNamingTool';
 import { VideoTools } from './pages/media/VideoTools';
 import { AudioTools } from './pages/media/AudioTools';
 import { ImageTools } from './pages/media/ImageTools';
@@ -118,6 +119,7 @@ import {
 } from './pages/tools/pdf';
 import { ThemeMode } from './types';
 import { FavoritesProvider } from './contexts/FavoritesContext';
+import { AIConfigProvider } from './contexts/AIConfigContext';
 import { FavoritesPage } from './pages/FavoritesPage';
 
 function App() {
@@ -142,8 +144,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <FavoritesProvider>
-        <BrowserRouter basename="/OctopusTool">
+      <AIConfigProvider>
+        <FavoritesProvider>
+          <BrowserRouter basename="/OctopusTool">
           <Routes>
             <Route path="/" element={<MainLayout onToggleTheme={toggleTheme} />}>
               <Route index element={<Home />} />
@@ -223,6 +226,7 @@ function App() {
             <Route path="tools/text/csv" element={<CsvTool />} />
             <Route path="tools/text/markdown-editor" element={<MarkdownEditor />} />
             <Route path="tools/text/emoji" element={<EmojiTool />} />
+            <Route path="tools/text/variable-naming" element={<VariableNamingTool />} />
             {/* 设计工具 */}
             <Route path="tools/design/color" element={<DesignColorTools />} />
             <Route path="tools/design/css" element={<CssTools />} />
@@ -264,7 +268,8 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      </FavoritesProvider>
+        </FavoritesProvider>
+      </AIConfigProvider>
     </ThemeProvider>
   );
 }

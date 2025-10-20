@@ -71,7 +71,27 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({ open, onClose })
         </Box>
       </DialogTitle>
 
-      <DialogContent>
+      <DialogContent
+        sx={{
+          // 自定义滚动条样式（主题适配）
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: (theme) => theme.palette.mode === 'dark' 
+              ? 'rgba(255, 255, 255, 0.05)' 
+              : 'rgba(0, 0, 0, 0.05)',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: (theme) => theme.palette.primary.main,
+            borderRadius: '4px',
+            '&:hover': {
+              backgroundColor: (theme) => theme.palette.primary.dark,
+            },
+          },
+        }}
+      >
         <Tabs value={currentTab} onChange={(_, newValue) => setCurrentTab(newValue)} sx={{ mb: 3 }}>
           <Tab label="AI 配置" />
           <Tab label="通用" disabled />

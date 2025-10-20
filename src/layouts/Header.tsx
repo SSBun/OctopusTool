@@ -63,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleTheme, onToggleSidebar }
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexGrow: 1 }}>
             <Box
               component="img"
-              src="/favicon.svg"
+              src={`${import.meta.env.BASE_URL}favicon.svg`}
               alt="Octopus Logo"
               sx={{
                 width: 32,

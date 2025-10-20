@@ -60,9 +60,21 @@ export const Header: React.FC<HeaderProps> = ({ onToggleTheme, onToggleSidebar }
             <MenuIcon />
           </IconButton>
           
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            🐙 Octopus Dev Tools
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexGrow: 1 }}>
+            <Box
+              component="img"
+              src="/favicon.svg"
+              alt="Octopus Logo"
+              sx={{
+                width: 32,
+                height: 32,
+                display: 'inline-block',
+              }}
+            />
+            <Typography variant="h6" noWrap component="div">
+              Octopus Dev Tools
+            </Typography>
+          </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             {/* 搜索按钮 */}

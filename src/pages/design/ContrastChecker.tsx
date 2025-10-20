@@ -8,7 +8,6 @@ import {
   Box,
   Typography,
   Paper,
-  TextField,
   Grid,
   Chip,
   Alert,
@@ -22,6 +21,7 @@ import {
 import { CheckCircle, Cancel, Info } from '@mui/icons-material';
 import chroma from 'chroma-js';
 import { ToolDetailHeader } from '../../components/ToolDetailHeader';
+import { ColorPicker } from '../../components/ColorPicker';
 
 export const ContrastChecker: React.FC = () => {
   const [foreground, setForeground] = useState('#000000');
@@ -107,53 +107,21 @@ export const ContrastChecker: React.FC = () => {
 
             {/* 前景色 */}
             <Box sx={{ mb: 3 }}>
-              <TextField
-                fullWidth
+              <ColorPicker
                 label="前景色（文字颜色）"
                 value={foreground}
-                onChange={(e) => setForeground(e.target.value)}
-                placeholder="#000000"
-                InputProps={{
-                  startAdornment: (
-                    <Box
-                      sx={{
-                        width: 32,
-                        height: 32,
-                        backgroundColor: foreground,
-                        borderRadius: 1,
-                        border: '1px solid',
-                        borderColor: 'divider',
-                        mr: 1,
-                      }}
-                    />
-                  ),
-                }}
+                onChange={setForeground}
+                helperText="点击色块可打开颜色选择器"
               />
             </Box>
 
             {/* 背景色 */}
             <Box>
-              <TextField
-                fullWidth
+              <ColorPicker
                 label="背景色"
                 value={background}
-                onChange={(e) => setBackground(e.target.value)}
-                placeholder="#ffffff"
-                InputProps={{
-                  startAdornment: (
-                    <Box
-                      sx={{
-                        width: 32,
-                        height: 32,
-                        backgroundColor: background,
-                        borderRadius: 1,
-                        border: '1px solid',
-                        borderColor: 'divider',
-                        mr: 1,
-                      }}
-                    />
-                  ),
-                }}
+                onChange={setBackground}
+                helperText="点击色块可打开颜色选择器"
               />
             </Box>
           </Paper>

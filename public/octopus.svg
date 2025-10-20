@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Octopus body gradient -->
+  <defs>
+    <linearGradient id="octopusGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="toolGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Octopus head -->
+  <ellipse cx="50" cy="35" rx="28" ry="25" fill="url(#octopusGradient)"/>
+  
+  <!-- Eyes -->
+  <circle cx="42" cy="32" r="5" fill="white"/>
+  <circle cx="58" cy="32" r="5" fill="white"/>
+  <circle cx="43" cy="32" r="3" fill="#333"/>
+  <circle cx="59" cy="32" r="3" fill="#333"/>
+  
+  <!-- Smile -->
+  <path d="M 42 42 Q 50 46 58 42" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Tool wrench in tentacle (right side) -->
+  <g transform="translate(70, 50) rotate(30)">
+    <rect x="0" y="0" width="3" height="14" rx="1" fill="url(#toolGradient)"/>
+    <circle cx="1.5" cy="1.5" r="2.5" fill="none" stroke="url(#toolGradient)" stroke-width="2"/>
+    <rect x="-2" y="12" width="7" height="3" rx="1" fill="url(#toolGradient)"/>
+  </g>
+  
+  <!-- 8 tentacles -->
+  <!-- Left tentacles -->
+  <path d="M 30 55 Q 20 65 18 75 Q 17 82 20 85" stroke="url(#octopusGradient)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M 35 56 Q 28 68 25 78 Q 24 85 27 88" stroke="url(#octopusGradient)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M 40 57 Q 36 70 35 80 Q 35 87 38 90" stroke="url(#octopusGradient)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M 45 58 Q 43 72 44 82 Q 45 89 48 92" stroke="url(#octopusGradient)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  
+  <!-- Right tentacles -->
+  <path d="M 55 58 Q 57 72 56 82 Q 55 89 52 92" stroke="url(#octopusGradient)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M 60 57 Q 64 70 65 80 Q 65 87 62 90" stroke="url(#octopusGradient)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M 65 56 Q 72 68 75 78 Q 76 85 73 88" stroke="url(#octopusGradient)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M 70 55 Q 80 65 82 75 Q 83 82 80 85" stroke="url(#octopusGradient)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  
+  <!-- Suction cups on tentacles -->
+  <circle cx="22" cy="78" r="2" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="29" cy="82" r="2" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="38" cy="85" r="2" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="47" cy="87" r="2" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="53" cy="87" r="2" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="62" cy="85" r="2" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="71" cy="82" r="2" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="78" cy="78" r="2" fill="rgba(255,255,255,0.3)"/>
+</svg>
+

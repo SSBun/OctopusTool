@@ -41,7 +41,7 @@ import {
   Translate,
 } from '@mui/icons-material';
 import { useAIConfig } from '../../../contexts/AIConfigContext';
-import { createActiveAIService } from '../../../services/aiService';
+import { createAIService } from '../../../services/aiService';
 import { z } from 'zod';
 import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 
@@ -147,7 +147,7 @@ const addHistoryRecord = (record: Omit<HistoryRecord, 'id' | 'timestamp'>) => {
 };
 
 export const VariableNamingTool: React.FC = () => {
-  const { activeConfig, isConfigured } = useAIConfig();
+  const { configs, activeConfig, isConfigured, getConfigById } = useAIConfig();
   const [description, setDescription] = useState('');
   const [additionalContext, setAdditionalContext] = useState('');
   const [namingStyle, setNamingStyle] = useState('camelCase');
@@ -159,9 +159,19 @@ export const VariableNamingTool: React.FC = () => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   
+  // AI 配置选择
+  const [selectedConfigId, setSelectedConfigId] = useState<string>(activeConfig?.id || '');
+  
   // 历史记录相关状态
   const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
   const [history, setHistory] = useState<HistoryRecord[]>(loadHistory());
+  
+  // 当 activeConfig 变化时更新选择的配置
+  React.useEffect(() => {
+    if (activeConfig && !selectedConfigId) {
+      setSelectedConfigId(activeConfig.id);
+    }
+  }, [activeConfig, selectedConfigId]);
 
   const handleGenerate = async () => {
     if (!description.trim()) {
@@ -174,15 +184,29 @@ export const VariableNamingTool: React.FC = () => {
       return;
     }
 
+    if (!selectedConfigId) {
+      setError('请选择一个 AI 配置');
+      return;
+    }
+
     setLoading(true);
     setError('');
     setSuggestions([]);
 
     try {
+      // 获取用户选择的配置
+      const selectedConfig = getConfigById(selectedConfigId);
+      if (!selectedConfig) {
+        setError('所选配置不存在');
+        setLoading(false);
+        return;
+      }
+
       // 创建 AI 服务实例
-      const aiService = createActiveAIService(activeConfig);
+      const aiService = createAIService(selectedConfig);
       if (!aiService) {
-        setError('未找到激活的 AI 配置');
+        setError('无法创建 AI 服务');
+        setLoading(false);
         return;
       }
 
@@ -348,6 +372,42 @@ ${additionalContext ? `额外上下文：${additionalContext}` : ''}
               onChange={(e) => setDescription(e.target.value)}
               helperText="描述变量的用途和含义"
             />
+
+            {/* AI 模型配置选择 */}
+            <FormControl fullWidth>
+              <InputLabel>AI 模型配置</InputLabel>
+              <Select
+                value={selectedConfigId}
+                label="AI 模型配置"
+                onChange={(e: SelectChangeEvent) => setSelectedConfigId(e.target.value)}
+                disabled={configs.length === 0}
+              >
+                {configs.length === 0 ? (
+                  <MenuItem value="" disabled>
+                    请先添加 AI 配置
+                  </MenuItem>
+                ) : (
+                  configs.map((config) => (
+                    <MenuItem key={config.id} value={config.id}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Typography>{config.name}</Typography>
+                        {config.isActive && (
+                          <Chip label="默认" size="small" color="primary" sx={{ height: 18, fontSize: '0.65rem' }} />
+                        )}
+                        <Typography variant="caption" color="text.secondary" sx={{ ml: 'auto' }}>
+                          {config.model}
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  ))
+                )}
+              </Select>
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, ml: 1.5 }}>
+                {configs.length > 0 
+                  ? `已选择: ${getConfigById(selectedConfigId)?.name || '未选择'} - ${getConfigById(selectedConfigId)?.model || ''}`
+                  : '请在右上角设置中添加 AI 配置'}
+              </Typography>
+            </FormControl>
 
             {/* 命名风格 */}
             <FormControl fullWidth>

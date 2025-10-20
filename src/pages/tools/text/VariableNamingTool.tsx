@@ -31,8 +31,7 @@ import {
   Psychology,
 } from '@mui/icons-material';
 import { useAIConfig } from '../../../contexts/AIConfigContext';
-import { openai } from '@ai-sdk/openai';
-import { generateObject } from 'ai';
+import { createActiveAIService } from '../../../services/aiService';
 import { z } from 'zod';
 import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 
@@ -79,7 +78,7 @@ const suggestionSchema = z.object({
 });
 
 export const VariableNamingTool: React.FC = () => {
-  const { config, isConfigured } = useAIConfig();
+  const { activeConfig, isConfigured } = useAIConfig();
   const [description, setDescription] = useState('');
   const [additionalContext, setAdditionalContext] = useState('');
   const [namingStyle, setNamingStyle] = useState('camelCase');
@@ -106,6 +105,13 @@ export const VariableNamingTool: React.FC = () => {
     setSuggestions([]);
 
     try {
+      // 创建 AI 服务实例
+      const aiService = createActiveAIService(activeConfig);
+      if (!aiService) {
+        setError('未找到激活的 AI 配置');
+        return;
+      }
+
       // 构建 prompt
       const prompt = `你是一个专业的变量命名助手。请根据以下要求生成 5 个变量名建议：
 
@@ -131,18 +137,11 @@ ${additionalContext ? `额外上下文：${additionalContext}` : ''}
 - 遵循编程最佳实践
 - 避免过于通用或模糊的名称`;
 
-      // 调用 AI SDK
-      const { object } = await generateObject({
-        model: openai(config.model, {
-          baseURL: config.baseUrl,
-          apiKey: config.apiKey,
-        }),
-        schema: suggestionSchema,
-        prompt,
-      });
+      // 使用统一的 AI 服务调用
+      const result = await aiService.generateObject(prompt, suggestionSchema);
 
       // 按分数排序
-      const sortedSuggestions = object.suggestions.sort((a, b) => b.score - a.score);
+      const sortedSuggestions = result.suggestions.sort((a, b) => b.score - a.score);
       setSuggestions(sortedSuggestions);
     } catch (err) {
       console.error('AI 生成失败:', err);

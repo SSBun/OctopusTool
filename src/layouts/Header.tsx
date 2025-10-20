@@ -69,6 +69,23 @@ export const Header: React.FC<HeaderProps> = ({ onToggleTheme, onToggleSidebar }
                 width: 36,
                 height: 36,
                 display: 'inline-block',
+                // 浮动动画
+                animation: 'float 3s ease-in-out infinite',
+                '@keyframes float': {
+                  '0%, 100%': {
+                    transform: 'translateY(0px)',
+                  },
+                  '50%': {
+                    transform: 'translateY(-6px)',
+                  },
+                },
+                // 悬停效果
+                transition: 'transform 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.15) rotate(5deg)',
+                  animation: 'none', // 悬停时停止浮动
+                  cursor: 'pointer',
+                },
               }}
             />
             <Typography variant="h6" noWrap component="div">

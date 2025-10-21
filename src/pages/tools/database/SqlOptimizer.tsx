@@ -17,7 +17,6 @@ import {
   Card,
   CardContent,
   LinearProgress,
-  Divider,
   List,
   ListItem,
   ListItemIcon,
@@ -304,7 +303,7 @@ CREATE TABLE products (
       <ToolDetailHeader
         title="SQL 性能优化"
         description="SQL 性能分析、索引推荐、执行计划解释"
-        category="数据库工具"
+        toolPath="/tools/database/sql-optimizer"
       />
 
       <Box sx={{ mb: 3 }}>

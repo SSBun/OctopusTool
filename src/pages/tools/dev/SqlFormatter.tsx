@@ -18,7 +18,6 @@ import {
   Chip,
   Stack,
   IconButton,
-  Tooltip,
   Divider,
   Menu,
   ListItemText,
@@ -284,7 +283,7 @@ export const SqlFormatter: React.FC = () => {
       <ToolDetailHeader
         title="SQL 格式化"
         description="美化和格式化 SQL 语句，支持多种数据库方言"
-        category="代码格式化"
+        toolPath="/tools/dev/sql-formatter"
       />
 
       <Box sx={{ mb: 3 }}>

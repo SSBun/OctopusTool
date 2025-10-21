@@ -244,7 +244,7 @@ export const SqlInjectionChecker: React.FC = () => {
       <ToolDetailHeader
         title="SQL 注入检测"
         description="分析 SQL 语句的安全风险，检测潜在的注入漏洞"
-        category="数据库工具"
+        toolPath="/tools/database/sql-injection-checker"
       />
 
       <Grid container spacing={3}>

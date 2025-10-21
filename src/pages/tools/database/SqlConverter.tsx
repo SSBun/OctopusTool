@@ -298,7 +298,7 @@ LIMIT 10, 20;`);
       <ToolDetailHeader
         title="SQL 转换工具"
         description="MySQL、PostgreSQL、SQL Server 等方言互转"
-        category="数据库工具"
+        toolPath="/tools/database/sql-converter"
       />
 
       <Box sx={{ mb: 3 }}>

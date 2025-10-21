@@ -15,7 +15,6 @@ import {
   Chip,
   Stack,
   IconButton,
-  Tooltip,
   Table,
   TableBody,
   TableCell,
@@ -23,16 +22,13 @@ import {
   TableHead,
   TableRow,
   Checkbox,
-  FormControlLabel,
   Grid,
-  Divider,
 } from '@mui/material';
 import {
   Add,
   Delete,
   ContentCopy,
   Code,
-  Save,
   TableChart,
 } from '@mui/icons-material';
 import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
@@ -370,7 +366,7 @@ export const TableDesigner: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
-      <ToolDetailHeader title="表结构设计器" description="可视化建表工具，生成 CREATE TABLE 语句" category="数据库工具" />
+      <ToolDetailHeader title="表结构设计器" description="可视化建表工具，生成 CREATE TABLE 语句" toolPath="/tools/database/table-designer" />
 
       <Box sx={{ mb: 3 }}>
         {/* 配置区 */}

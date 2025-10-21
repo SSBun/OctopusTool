@@ -36,9 +36,7 @@ export class AIService {
    */
   private getModel() {
     const provider = this.getProvider();
-    return provider(this.config.model, {
-      apiKey: this.config.apiKey,
-    });
+    return provider(this.config.model);
   }
 
   /**
@@ -54,7 +52,6 @@ export class AIService {
       await generateText({
         model,
         prompt: 'Hello',
-        maxTokens: 5,
       });
 
       const latency = Date.now() - startTime;
@@ -84,7 +81,6 @@ export class AIService {
     return generateText({
       model,
       prompt,
-      maxTokens: options?.maxTokens,
       temperature: options?.temperature,
     });
   }
@@ -101,14 +97,14 @@ export class AIService {
   ): Promise<z.infer<T>> {
     const model = this.getModel();
     
-    const { object } = await generateObject({
+    const result = await generateObject({
       model,
       schema,
       prompt,
       temperature: options?.temperature,
     });
 
-    return object;
+    return result.object as z.infer<T>;
   }
 
   /**
@@ -124,7 +120,6 @@ export class AIService {
     const stream = await streamText({
       model,
       prompt,
-      maxTokens: options?.maxTokens,
       temperature: options?.temperature,
     });
 

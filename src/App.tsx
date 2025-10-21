@@ -60,7 +60,8 @@ import {
   PortTool,
   CurlTool,
   HttpTool,
-  UrlParserTool 
+  UrlParserTool,
+  MqttTool 
 } from './pages/tools/network';
 import { HttpTools } from './pages/tools/network/HttpTools';
 import { UrlTools } from './pages/tools/network/UrlTools';
@@ -95,6 +96,8 @@ import {
   ResizeTool,
   Base64Tool as ImageBase64Tool,
   InfoTool,
+  WatermarkTool,
+  MergeTool,
 } from './pages/media/image';
 import {
   ScreenshotTool,
@@ -225,6 +228,7 @@ function App() {
             <Route path="tools/network/ua" element={<UserAgentTool />} />
             <Route path="tools/network/status" element={<StatusCodeTool />} />
             <Route path="tools/network/port" element={<PortTool />} />
+            <Route path="tools/network/mqtt" element={<MqttTool />} />
             {/* 文本处理工具 */}
             <Route path="tools/text" element={<TextTools />} />
             <Route path="tools/text/edit" element={<EditTools />} />
@@ -280,6 +284,8 @@ function App() {
             <Route path="media/image/resize" element={<ResizeTool />} />
             <Route path="media/image/base64" element={<ImageBase64Tool />} />
             <Route path="media/image/info" element={<InfoTool />} />
+            <Route path="media/image/watermark" element={<WatermarkTool />} />
+            <Route path="media/image/merge" element={<MergeTool />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

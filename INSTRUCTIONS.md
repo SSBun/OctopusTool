@@ -135,7 +135,40 @@ Octopus/
    - 间距: `theme.spacing(2)`
    - 断点: `theme.breakpoints.up('md')`
 
-4. **滚动条样式规范**: 🚨 **强制要求** - 所有带滚动条的容器都**必须**适配主题
+4. **颜色选择器规范**: 🚨 **强制要求** - 所有需要用户输入颜色的地方都**必须**使用统一的 ColorPicker 组件
+   
+   **⚠️ 这是强制性规范，禁止使用原生 color input 或其他自定义颜色选择方案！**
+   
+   ```tsx
+   import { ColorPicker } from '../../../components/ColorPicker';
+   
+   // 正确用法
+   <ColorPicker
+     label="背景颜色"
+     value={backgroundColor}
+     onChange={setBackgroundColor}
+     helperText="选择或输入十六进制颜色值"
+     fullWidth
+   />
+   ```
+   
+   **强制要点**:
+   - ✅ **必须**使用 `src/components/ColorPicker.tsx` 组件
+   - ✅ 支持可视化颜色选择器（基于 react-colorful）
+   - ✅ 支持手动输入十六进制色值
+   - ✅ 自动显示颜色预览块
+   - ✅ 提供常用颜色快捷选择
+   - ✅ 统一的交互体验和样式
+   
+   **❌ 禁止使用**:
+   - 原生 `<input type="color">` 元素
+   - 其他第三方颜色选择器库
+   - 简单的 TextField + 颜色块组合
+   - 任何非统一的颜色输入方案
+   
+   **必需依赖**: 项目已包含 `react-colorful` 依赖，ColorPicker 基于此实现
+
+5. **滚动条样式规范**: 🚨 **强制要求** - 所有带滚动条的容器都**必须**适配主题
    
    **⚠️ 这是强制性规范，任何新增的滚动容器都必须应用此样式！**
    
@@ -426,7 +459,11 @@ export const CategoryTools: React.FC = () => {
 4. **避免过度优化，保持代码可读性**
 5. **及时更新依赖版本**（注意破坏性更新）
 6. **敏感信息不要提交到代码库**
-7. **🚨 所有滚动容器必须强制应用主题适配的滚动条样式**（见 MUI 样式规范第4点）
+7. **🚨 所有颜色输入必须强制使用统一的 ColorPicker 组件**（见 MUI 样式规范第4点）
+   - 这是强制性要求，不是可选项
+   - 禁止使用原生 `<input type="color">` 或其他自定义方案
+   - 所有新增颜色输入都必须使用 `src/components/ColorPicker.tsx`
+8. **🚨 所有滚动容器必须强制应用主题适配的滚动条样式**（见 MUI 样式规范第5点）
    - 这是强制性要求，不是可选项
    - 滑块必须使用 `primary.main` 和 `primary.dark`，不得使用透明度
    - 所有新增滚动容器都必须遵循此规范

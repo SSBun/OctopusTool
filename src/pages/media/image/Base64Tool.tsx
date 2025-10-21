@@ -188,6 +188,23 @@ export const Base64Tool: React.FC = () => {
                     fontFamily: 'monospace',
                     fontSize: '0.875rem',
                   },
+                  // 主题适配的滚动条样式
+                  '& textarea': {
+                    '&::-webkit-scrollbar': { width: '8px' },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                        ? 'rgba(255, 255, 255, 0.05)' 
+                        : 'rgba(0, 0, 0, 0.05)',
+                      borderRadius: '4px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: (theme) => theme.palette.primary.main,
+                      borderRadius: '4px',
+                      '&:hover': {
+                        backgroundColor: (theme) => theme.palette.primary.dark,
+                      },
+                    },
+                  },
                 }}
               />
 
@@ -222,6 +239,23 @@ export const Base64Tool: React.FC = () => {
                   '& .MuiOutlinedInput-root': {
                     fontFamily: 'monospace',
                     fontSize: '0.875rem',
+                  },
+                  // 主题适配的滚动条样式
+                  '& textarea': {
+                    '&::-webkit-scrollbar': { width: '8px' },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                        ? 'rgba(255, 255, 255, 0.05)' 
+                        : 'rgba(0, 0, 0, 0.05)',
+                      borderRadius: '4px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: (theme) => theme.palette.primary.main,
+                      borderRadius: '4px',
+                      '&:hover': {
+                        backgroundColor: (theme) => theme.palette.primary.dark,
+                      },
+                    },
                   },
                 }}
               />

@@ -436,6 +436,14 @@ export const ALL_TOOLS: Tool[] = [
     category: '网络工具',
   },
   {
+    icon: <Terminal sx={{ fontSize: 40 }} />,
+    title: 'MQTT 客户端',
+    description: '连接 MQTT 服务器，订阅主题、发送消息',
+    path: '/tools/network/mqtt',
+    status: '可用',
+    category: '网络工具',
+  },
+  {
     icon: <Wifi sx={{ fontSize: 40 }} />,
     title: 'WebSocket 测试',
     description: 'WebSocket 连接测试和消息调试',
@@ -1006,7 +1014,7 @@ export const ALL_TOOLS: Tool[] = [
     title: '图片水印',
     description: '批量添加文字或图片水印',
     path: '/media/image/watermark',
-    status: '计划中',
+    status: '可用',
     category: '图片处理',
   },
   {
@@ -1020,9 +1028,9 @@ export const ALL_TOOLS: Tool[] = [
   {
     icon: <Merge sx={{ fontSize: 40 }} />,
     title: '图片拼接',
-    description: '多张图片拼接成长图',
+    description: '多张图片拼接成长图，支持垂直、水平和网格布局',
     path: '/media/image/merge',
-    status: '计划中',
+    status: '可用',
     category: '图片处理',
   },
 ];

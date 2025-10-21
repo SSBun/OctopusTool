@@ -218,7 +218,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
 
   // 网络工具
   const networkCategories = [
-    { label: 'HTTP 工具', icon: <Http />, path: '/tools/network/http' },
+    { label: '请求测试', icon: <Http />, path: '/tools/network/http' },
     { label: 'URL 工具', icon: <Link />, path: '/tools/network/url' },
     { label: '网络诊断', icon: <NetworkCheck />, path: '/tools/network/diagnostic' },
     { label: '网络参考', icon: <Info />, path: '/tools/network/reference' },

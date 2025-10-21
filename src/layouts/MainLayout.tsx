@@ -11,9 +11,6 @@ import {
   useMediaQuery,
   useTheme,
   Collapse,
-  IconButton,
-  Tooltip,
-  Divider,
 } from '@mui/material';
 import {
   Home,
@@ -45,7 +42,6 @@ import {
   Sync,
   Palette,
   SwapHoriz as SwapHorizIcon,
-  Settings,
   Storage,
 } from '@mui/icons-material';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -77,7 +73,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
   };
 
   const [developmentOpen, setDevelopmentOpen] = useState(() => getStoredState('development'));
-  const [databaseOpen, setDatabaseOpen] = useState(() => getStoredState('database'));
   const [securityOpen, setSecurityOpen] = useState(() => getStoredState('security'));
   const [dataOpen, setDataOpen] = useState(() => getStoredState('data'));
   const [networkOpen, setNetworkOpen] = useState(() => getStoredState('network'));
@@ -102,9 +97,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
     if (path.startsWith('/tools/json') || path.startsWith('/tools/dev/format')) {
       setDevelopmentOpen(true);
       saveState('development', true);
-    } else if (path.startsWith('/tools/database/')) {
-      setDatabaseOpen(true);
-      saveState('database', true);
     } else if (path.startsWith('/tools/crypto') || path.startsWith('/tools/encoding')) {
       setSecurityOpen(true);
       saveState('security', true);
@@ -137,12 +129,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ onToggleTheme }) => {
     const newState = !developmentOpen;
     setDevelopmentOpen(newState);
     saveState('development', newState);
-  };
-
-  const handleDatabaseToggle = () => {
-    const newState = !databaseOpen;
-    setDatabaseOpen(newState);
-    saveState('database', newState);
   };
 
   const handleSecurityToggle = () => {

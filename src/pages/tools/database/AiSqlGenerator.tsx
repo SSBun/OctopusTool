@@ -32,7 +32,6 @@ import {
   StarBorder,
   Lightbulb,
   Speed,
-  Description,
   Warning,
 } from '@mui/icons-material';
 import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
@@ -201,7 +200,7 @@ CREATE TABLE orders (
       <ToolDetailHeader
         title="AI SQL 生成器"
         description="自然语言生成 SQL 查询，智能优化建议"
-        category="数据库工具"
+        toolPath="/tools/database/ai-sql-generator"
       />
 
       <Box sx={{ mb: 3 }}>

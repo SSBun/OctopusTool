@@ -12,7 +12,6 @@ import {
   Chip,
   Stack,
   Alert,
-  Divider,
   Tooltip,
   Dialog as ConfirmDialog,
   DialogActions,
@@ -39,7 +38,7 @@ interface SettingsDialogProps {
 }
 
 export const SettingsDialog: React.FC<SettingsDialogProps> = ({ open, onClose }) => {
-  const { configs, activeConfig, addConfig, updateConfig, deleteConfig, setActiveConfig } = useAIConfig();
+  const { configs, addConfig, updateConfig, deleteConfig, setActiveConfig } = useAIConfig();
   
   const [formDialogOpen, setFormDialogOpen] = useState(false);
   const [editingConfig, setEditingConfig] = useState<AIConfig | null>(null);

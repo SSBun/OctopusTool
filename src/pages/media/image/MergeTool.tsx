@@ -494,6 +494,7 @@ export const MergeTool: React.FC = () => {
       <ToolDetailHeader
         title="图片拼接"
         description="将多张图片拼接成一张长图，支持垂直、水平和网格布局"
+        toolPath="/media/image/merge"
       />
 
       <Grid container spacing={3}>

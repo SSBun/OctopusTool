@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
 Container,
   Typography,
@@ -14,6 +14,12 @@ Container,
   Tabs,
   Tab,
   Slider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  IconButton,
+  Chip,
 } from '@mui/material';
 import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
 import {
@@ -25,10 +31,13 @@ import {
   CameraAlt,
   Upload,
   ViewInAr,
+  History,
+  Delete,
 } from '@mui/icons-material';
 import QRCode from 'qrcode';
 import JsBarcode from 'jsbarcode';
 import { Html5Qrcode } from 'html5-qrcode';
+import { nanoid } from 'nanoid';
 
 type QRErrorLevel = 'L' | 'M' | 'Q' | 'H';
 type BarcodeFormat = 'CODE128' | 'EAN13' | 'EAN8' | 'UPC' | 'CODE39' | 'ITF14';
@@ -37,6 +46,18 @@ interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
+}
+
+// 二维码历史记录接口
+interface QRHistoryRecord {
+  id: string;
+  text: string;
+  size: number;
+  errorLevel: QRErrorLevel;
+  color: string;
+  bgColor: string;
+  timestamp: number;
+  dataUrl: string;
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -54,6 +75,67 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
+// 历史记录工具函数
+const loadQRHistory = (): QRHistoryRecord[] => {
+  try {
+    const stored = localStorage.getItem('qr-generator-history');
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveQRHistory = (history: QRHistoryRecord[]) => {
+  try {
+    localStorage.setItem('qr-generator-history', JSON.stringify(history.slice(0, 50))); // 保留最近 50 条
+  } catch (error) {
+    console.error('Failed to save history:', error);
+  }
+};
+
+const addQRHistoryRecord = (record: Omit<QRHistoryRecord, 'id' | 'timestamp'>) => {
+  const history = loadQRHistory();
+  const newRecord: QRHistoryRecord = {
+    ...record,
+    id: nanoid(),
+    timestamp: Date.now(),
+  };
+  history.unshift(newRecord);
+  saveQRHistory(history);
+};
+
+// 格式化时间戳
+const formatTimestamp = (timestamp: number): string => {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+  
+  // 小于1分钟
+  if (diff < 60000) {
+    return '刚刚';
+  }
+  // 小于1小时
+  if (diff < 3600000) {
+    return `${Math.floor(diff / 60000)}分钟前`;
+  }
+  // 小于24小时
+  if (diff < 86400000) {
+    return `${Math.floor(diff / 3600000)}小时前`;
+  }
+  // 小于7天
+  if (diff < 604800000) {
+    return `${Math.floor(diff / 86400000)}天前`;
+  }
+  // 否则显示具体日期
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
 export const QrBarcodeTool: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
 
@@ -64,6 +146,13 @@ export const QrBarcodeTool: React.FC = () => {
   const [qrColor, setQrColor] = useState('#000000');
   const [qrBgColor, setQrBgColor] = useState('#FFFFFF');
   const [qrDataUrl, setQrDataUrl] = useState('');
+
+  // 历史记录
+  const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false);
+  const [qrHistory, setQrHistory] = useState<QRHistoryRecord[]>(loadQRHistory());
+
+  // 生成状态
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // 二维码解析
   const [scanResult, setScanResult] = useState('');
@@ -83,17 +172,12 @@ export const QrBarcodeTool: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
-  // 生成二维码
-  useEffect(() => {
-    if (qrText) {
-      generateQRCode();
-    } else {
-      setQrDataUrl('');
-    }
-  }, [qrText, qrSize, qrErrorLevel, qrColor, qrBgColor]);
-
-  const generateQRCode = async () => {
+  // 二维码生成函数
+  const generateQRCode = useCallback(async () => {
+    if (!qrText) return;
+    
     try {
+      setIsGenerating(false); // 开始生成，隐藏提示
       const dataUrl = await QRCode.toDataURL(qrText, {
         errorCorrectionLevel: qrErrorLevel,
         width: qrSize,
@@ -105,11 +189,44 @@ export const QrBarcodeTool: React.FC = () => {
       });
       setQrDataUrl(dataUrl);
       setError('');
+      
+      // 保存到历史记录
+      addQRHistoryRecord({
+        text: qrText,
+        size: qrSize,
+        errorLevel: qrErrorLevel,
+        color: qrColor,
+        bgColor: qrBgColor,
+        dataUrl,
+      });
+      setQrHistory(loadQRHistory());
     } catch (err) {
       setError('二维码生成失败：' + (err instanceof Error ? err.message : '未知错误'));
       setQrDataUrl('');
     }
-  };
+  }, [qrText, qrSize, qrErrorLevel, qrColor, qrBgColor]);
+
+  // 生成二维码 - 添加防抖，停止修改2秒后才生成
+  useEffect(() => {
+    if (!qrText) {
+      setQrDataUrl('');
+      setIsGenerating(false);
+      return;
+    }
+
+    // 显示等待状态
+    setIsGenerating(true);
+
+    // 设置防抖定时器
+    const debounceTimer = setTimeout(() => {
+      generateQRCode();
+    }, 2000); // 2秒延迟
+
+    // 清理函数：组件卸载或依赖变化时清除定时器
+    return () => {
+      clearTimeout(debounceTimer);
+    };
+  }, [qrText, qrSize, qrErrorLevel, qrColor, qrBgColor, generateQRCode]);
 
   // 生成条形码
   useEffect(() => {
@@ -283,6 +400,36 @@ export const QrBarcodeTool: React.FC = () => {
     setTimeout(() => setSuccess(''), 2000);
   };
 
+  // 从历史记录加载
+  const handleLoadHistory = (record: QRHistoryRecord) => {
+    setQrText(record.text);
+    setQrSize(record.size);
+    setQrErrorLevel(record.errorLevel);
+    setQrColor(record.color);
+    setQrBgColor(record.bgColor);
+    setQrDataUrl(record.dataUrl);
+    setHistoryDrawerOpen(false);
+    setSuccess('已加载历史记录！');
+    setTimeout(() => setSuccess(''), 2000);
+  };
+
+  // 删除历史记录
+  const handleDeleteHistory = (id: string) => {
+    const updatedHistory = qrHistory.filter(record => record.id !== id);
+    setQrHistory(updatedHistory);
+    saveQRHistory(updatedHistory);
+    setSuccess('历史记录已删除！');
+    setTimeout(() => setSuccess(''), 2000);
+  };
+
+  // 清空所有历史记录
+  const handleClearAllHistory = () => {
+    setQrHistory([]);
+    saveQRHistory([]);
+    setSuccess('已清空所有历史记录！');
+    setTimeout(() => setSuccess(''), 2000);
+  };
+
   // 示例数据
   const handleQRExample = () => {
     setQrText('https://github.com');
@@ -303,12 +450,24 @@ export const QrBarcodeTool: React.FC = () => {
         toolPath="/tools/data/qrbarcode"
       />
 
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>
-          <Tab label="二维码生成" icon={<QrCode2 />} iconPosition="start" />
-          <Tab label="二维码解析" icon={<QrCodeScanner />} iconPosition="start" />
-          <Tab label="条形码生成" icon={<ViewInAr />} iconPosition="start" />
-        </Tabs>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', flex: 1 }}>
+          <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>
+            <Tab label="二维码生成" icon={<QrCode2 />} iconPosition="start" />
+            <Tab label="二维码解析" icon={<QrCodeScanner />} iconPosition="start" />
+            <Tab label="条形码生成" icon={<ViewInAr />} iconPosition="start" />
+          </Tabs>
+        </Box>
+        {tabValue === 0 && (
+          <Button
+            variant="outlined"
+            startIcon={<History />}
+            onClick={() => setHistoryDrawerOpen(true)}
+            sx={{ ml: 2 }}
+          >
+            历史记录 ({qrHistory.length})
+          </Button>
+        )}
       </Box>
 
       {/* 成功/错误提示 */}
@@ -400,6 +559,7 @@ export const QrBarcodeTool: React.FC = () => {
                 <Alert severity="info">
                   <strong>提示：</strong>
                   <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
+                    <li>修改配置后 2 秒将自动生成二维码</li>
                     <li>容错级别越高，二维码越复杂，但损坏后仍可读取</li>
                     <li>深色前景 + 浅色背景效果最佳</li>
                     <li>二维码大小影响扫描距离</li>
@@ -462,6 +622,11 @@ export const QrBarcodeTool: React.FC = () => {
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
                     {qrSize} × {qrSize} 像素
                   </Typography>
+                  {isGenerating && (
+                    <Alert severity="info" sx={{ mt: 2 }}>
+                      修改后 2 秒将自动更新二维码...
+                    </Alert>
+                  )}
                 </Box>
               ) : (
                 <Box
@@ -476,9 +641,20 @@ export const QrBarcodeTool: React.FC = () => {
                 >
                   <Box sx={{ textAlign: 'center' }}>
                     <QrCode2 sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
-                    <Typography color="text.secondary">
-                      输入内容后将自动生成二维码
-                    </Typography>
+                    {isGenerating ? (
+                      <>
+                        <Typography color="primary" sx={{ mb: 1 }}>
+                          等待输入完成...
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          停止修改 2 秒后将自动生成二维码
+                        </Typography>
+                      </>
+                    ) : (
+                      <Typography color="text.secondary">
+                        输入内容后将自动生成二维码
+                      </Typography>
+                    )}
                   </Box>
                 </Box>
               )}
@@ -847,6 +1023,167 @@ export const QrBarcodeTool: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
+
+      {/* 历史记录抽屉 */}
+      <Drawer
+        anchor="right"
+        open={historyDrawerOpen}
+        onClose={() => setHistoryDrawerOpen(false)}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: { xs: '100%', sm: 400 },
+            maxWidth: '100%',
+          },
+        }}
+      >
+        <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Typography variant="h6" fontWeight={600}>
+              二维码历史记录
+            </Typography>
+            <IconButton onClick={() => setHistoryDrawerOpen(false)} size="small">
+              <Clear />
+            </IconButton>
+          </Box>
+
+          {qrHistory.length > 0 ? (
+            <>
+              <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="body2" color="text.secondary">
+                  共 {qrHistory.length} 条记录
+                </Typography>
+                <Button
+                  size="small"
+                  color="error"
+                  onClick={handleClearAllHistory}
+                  startIcon={<Delete />}
+                >
+                  清空全部
+                </Button>
+              </Box>
+
+              <List sx={{ flex: 1, overflow: 'auto' }}>
+                {qrHistory.map((record) => (
+                  <React.Fragment key={record.id}>
+                    <ListItem
+                      disablePadding
+                      sx={{
+                        borderRadius: 1,
+                        mb: 1,
+                        border: 1,
+                        borderColor: 'divider',
+                      }}
+                    >
+                      <ListItemButton
+                        onClick={() => handleLoadHistory(record)}
+                        sx={{
+                          flexDirection: 'column',
+                          alignItems: 'stretch',
+                          p: 2,
+                          '&:hover': {
+                            bgcolor: 'action.hover',
+                          },
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                          <Box sx={{ flex: 1, minWidth: 0, mr: 1 }}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontWeight: 600,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                mb: 0.5,
+                              }}
+                            >
+                              {record.text}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {formatTimestamp(record.timestamp)}
+                            </Typography>
+                          </Box>
+                          <IconButton
+                            size="small"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteHistory(record.id);
+                            }}
+                            sx={{ flexShrink: 0 }}
+                          >
+                            <Delete fontSize="small" />
+                          </IconButton>
+                        </Box>
+
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                          <img
+                            src={record.dataUrl}
+                            alt="QR Code"
+                            style={{
+                              width: 60,
+                              height: 60,
+                              borderRadius: 4,
+                              border: '1px solid',
+                              borderColor: 'divider',
+                            }}
+                          />
+                          <Box sx={{ flex: 1 }}>
+                            <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+                              <Chip label={`${record.size}px`} size="small" />
+                              <Chip label={record.errorLevel} size="small" />
+                              <Chip
+                                label="颜色"
+                                size="small"
+                                sx={{
+                                  bgcolor: record.color,
+                                  color: record.bgColor,
+                                  border: '1px solid',
+                                  borderColor: 'divider',
+                                }}
+                              />
+                            </Stack>
+                          </Box>
+                        </Box>
+
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          点击加载此配置
+                        </Typography>
+                      </ListItemButton>
+                    </ListItem>
+                  </React.Fragment>
+                ))}
+              </List>
+            </>
+          ) : (
+            <Box
+              sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'text.secondary',
+              }}
+            >
+              <History sx={{ fontSize: 64, mb: 2, opacity: 0.3 }} />
+              <Typography variant="body2">暂无历史记录</Typography>
+              <Typography variant="caption" sx={{ mt: 1 }}>
+                生成二维码后将自动保存到历史记录
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </Drawer>
     </Container>
   );
 };

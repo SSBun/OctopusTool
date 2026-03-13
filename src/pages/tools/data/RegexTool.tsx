@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
-Container,
+  Container,
   Typography,
   Box,
   TextField,
@@ -14,19 +14,165 @@ Container,
   List,
   ListItem,
   ListItemText,
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  IconButton,
+  Tooltip,
+  useTheme,
 } from '@mui/material';
 import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
-import { Pattern, Clear } from '@mui/icons-material';
+import { Pattern, Clear, ContentCopy, ExpandMore, CheckCircle, Cancel } from '@mui/icons-material';
+
+interface MatchResult {
+  match: string;
+  index: number;
+  groups: string[] | null;
+  namedGroups: Record<string, string> | null;
+}
+
+const HighlightedTextArea: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  matches: MatchResult[];
+  placeholder?: string;
+  rows?: number;
+}> = ({ value, onChange, matches, placeholder, rows = 6 }) => {
+  const theme = useTheme();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const highlightRef = useRef<HTMLDivElement>(null);
+
+  const highlightedContent = useMemo(() => {
+    if (!value || matches.length === 0) {
+      return value || '';
+    }
+
+    const parts: { text: string; isMatch: boolean }[] = [];
+    let lastIndex = 0;
+    const sortedMatches = [...matches].sort((a, b) => a.index - b.index);
+
+    sortedMatches.forEach((match) => {
+      if (match.index > lastIndex) {
+        parts.push({ text: value.slice(lastIndex, match.index), isMatch: false });
+      }
+      if (match.index >= lastIndex) {
+        parts.push({ text: match.match, isMatch: true });
+        lastIndex = match.index + match.match.length;
+      }
+    });
+
+    if (lastIndex < value.length) {
+      parts.push({ text: value.slice(lastIndex), isMatch: false });
+    }
+
+    return parts;
+  }, [value, matches]);
+
+  const handleScroll = () => {
+    if (textareaRef.current && highlightRef.current) {
+      highlightRef.current.scrollTop = textareaRef.current.scrollTop;
+      highlightRef.current.scrollLeft = textareaRef.current.scrollLeft;
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        width: '100%',
+      }}
+    >
+      <Box
+        ref={highlightRef}
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          p: '16.5px 14px',
+          fontFamily: 'monospace',
+          fontSize: '0.875rem',
+          lineHeight: '1.4375em',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-all',
+          overflow: 'auto',
+          pointerEvents: 'none',
+          border: '1px solid',
+          borderColor: 'rgba(0, 0, 0, 0.23)',
+          borderRadius: '4px',
+          backgroundColor: theme.palette.mode === 'dark' ? '#1e1e1e' : '#fff',
+          '& .match': {
+            backgroundColor: '#4caf50',
+            color: '#fff',
+            borderRadius: '2px',
+          },
+        }}
+      >
+        {Array.isArray(highlightedContent) ? (
+          highlightedContent.map((part, idx) =>
+            part.isMatch ? (
+              <span key={idx} className="match">
+                {part.text}
+              </span>
+            ) : (
+              <span key={idx}>{part.text}</span>
+            )
+          )
+        ) : (
+          highlightedContent
+        )}
+        {!value && placeholder && (
+          <span style={{ color: theme.palette.text.secondary }}>{placeholder}</span>
+        )}
+      </Box>
+      <textarea
+        ref={textareaRef}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onScroll={handleScroll}
+        placeholder={placeholder}
+        rows={rows}
+        style={{
+          width: '100%',
+          minHeight: rows ? `${rows * 1.4375 * 16}px` : 'auto',
+          padding: '16.5px 14px',
+          fontFamily: 'monospace',
+          fontSize: '0.875rem',
+          lineHeight: '1.4375em',
+          border: '1px solid',
+          borderColor: 'rgba(0, 0, 0, 0.23)',
+          borderRadius: '4px',
+          resize: 'vertical',
+          outline: 'none',
+          backgroundColor: 'transparent',
+          color: theme.palette.mode === 'dark' ? '#e0e0e0' : '#000',
+          caretColor: theme.palette.mode === 'dark' ? '#fff' : '#000',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      />
+    </Box>
+  );
+};
 
 export const RegexTool: React.FC = () => {
   const [pattern, setPattern] = useState('');
   const [testString, setTestString] = useState('');
-  const [flags, setFlags] = useState({ g: true, i: false, m: false });
-  const [matches, setMatches] = useState<string[]>([]);
+  const [flags, setFlags] = useState({ g: true, i: false, m: false, s: false });
+  const [matches, setMatches] = useState<MatchResult[]>([]);
   const [error, setError] = useState('');
   const [isMatch, setIsMatch] = useState<boolean | null>(null);
 
-  const handleTest = () => {
+  const getFlagString = useCallback(() => {
+    return Object.entries(flags)
+      .filter(([_, value]) => value)
+      .map(([key]) => key)
+      .join('');
+  }, [flags]);
+
+  const executeRegex = useCallback(() => {
     setError('');
     setMatches([]);
     setIsMatch(null);
@@ -34,16 +180,37 @@ export const RegexTool: React.FC = () => {
     if (!pattern || !testString) return;
 
     try {
-      const flagString = Object.entries(flags)
-        .filter(([_, value]) => value)
-        .map(([key]) => key)
-        .join('');
-      
+      const flagString = getFlagString();
       const regex = new RegExp(pattern, flagString);
-      const matchResults = testString.match(regex);
-      
-      if (matchResults) {
-        setMatches(matchResults);
+      const results: MatchResult[] = [];
+
+      if (flags.g) {
+        let match;
+        while ((match = regex.exec(testString)) !== null) {
+          results.push({
+            match: match[0],
+            index: match.index,
+            groups: match.slice(1),
+            namedGroups: match.groups || null,
+          });
+          if (match[0].length === 0) {
+            regex.lastIndex++;
+          }
+        }
+      } else {
+        const match = testString.match(regex);
+        if (match) {
+          results.push({
+            match: match[0],
+            index: match.index ?? 0,
+            groups: match.slice(1),
+            namedGroups: match.groups || null,
+          });
+        }
+      }
+
+      if (results.length > 0) {
+        setMatches(results);
         setIsMatch(true);
       } else {
         setIsMatch(false);
@@ -52,7 +219,11 @@ export const RegexTool: React.FC = () => {
       setError(e instanceof Error ? e.message : '正则表达式错误');
       setIsMatch(null);
     }
-  };
+  }, [pattern, testString, flags, getFlagString]);
+
+  useEffect(() => {
+    executeRegex();
+  }, [executeRegex]);
 
   const handleClear = () => {
     setPattern('');
@@ -65,6 +236,10 @@ export const RegexTool: React.FC = () => {
   const handleExample = () => {
     setPattern('\\d{3}-\\d{4}-\\d{4}');
     setTestString('联系电话：010-1234-5678，备用电话：021-8765-4321');
+  };
+
+  const copyMatch = (text: string) => {
+    navigator.clipboard.writeText(text);
   };
 
   const commonPatterns = [
@@ -83,32 +258,30 @@ export const RegexTool: React.FC = () => {
         toolPath="/tools/data/regex-tester"
       />
 
-      <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
-        <Button
-          variant="contained"
-          startIcon={<Pattern />}
-          onClick={handleTest}
-          disabled={!pattern || !testString}
-        >
-          测试匹配
-        </Button>
+      <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
         <Button variant="outlined" startIcon={<Clear />} onClick={handleClear}>
           清空
         </Button>
         <Button variant="text" onClick={handleExample}>
           加载示例
         </Button>
+        {isMatch !== null && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 'auto' }}>
+            {isMatch ? (
+              <CheckCircle color="success" sx={{ fontSize: 20 }} />
+            ) : (
+              <Cancel color="disabled" sx={{ fontSize: 20 }} />
+            )}
+            <Typography variant="body2" color={isMatch ? 'success.main' : 'text.secondary'}>
+              {isMatch ? `匹配成功！找到 ${matches.length} 个匹配项` : '没有匹配项'}
+            </Typography>
+          </Box>
+        )}
       </Box>
 
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
-        </Alert>
-      )}
-
-      {isMatch !== null && (
-        <Alert severity={isMatch ? 'success' : 'info'} sx={{ mb: 3 }}>
-          {isMatch ? `匹配成功！找到 ${matches.length} 个匹配项` : '没有匹配项'}
         </Alert>
       )}
 
@@ -123,6 +296,7 @@ export const RegexTool: React.FC = () => {
               value={pattern}
               onChange={(e) => setPattern(e.target.value)}
               placeholder="输入正则表达式，例如：\d{3}-\d{4}"
+              error={!!error}
               sx={{
                 mb: 2,
                 '& .MuiOutlinedInput-root': {
@@ -159,26 +333,28 @@ export const RegexTool: React.FC = () => {
                 }
                 label="多行模式 (m)"
               />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={flags.s}
+                    onChange={(e) => setFlags({ ...flags, s: e.target.checked })}
+                  />
+                }
+                label="单行模式 (s)"
+              />
             </FormGroup>
           </Paper>
 
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom fontWeight={600}>
-              测试字符串
+              测试字符串（匹配项已高亮）
             </Typography>
-            <TextField
-              fullWidth
-              multiline
-              rows={15}
+            <HighlightedTextArea
               value={testString}
-              onChange={(e) => setTestString(e.target.value)}
+              onChange={setTestString}
+              matches={matches}
               placeholder="输入要测试的字符串"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  fontFamily: 'monospace',
-                  fontSize: '0.875rem',
-                },
-              }}
+              rows={12}
             />
           </Paper>
         </Box>
@@ -187,24 +363,105 @@ export const RegexTool: React.FC = () => {
           {matches.length > 0 && (
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h6" gutterBottom fontWeight={600}>
-                匹配结果
+                匹配结果 ({matches.length})
               </Typography>
-              <List>
+              <List disablePadding>
                 {matches.map((match, index) => (
-                  <ListItem key={index} sx={{ px: 0 }}>
-                    <ListItemText
-                      primary={`匹配 ${index + 1}`}
-                      secondary={match}
-                      secondaryTypographyProps={{
-                        sx: {
-                          fontFamily: 'monospace',
-                          fontSize: '0.875rem',
-                          color: 'primary.main',
-                          wordBreak: 'break-all',
-                        },
-                      }}
-                    />
-                  </ListItem>
+                  <React.Fragment key={index}>
+                    <ListItem
+                      sx={{ px: 0, py: 1 }}
+                      secondaryAction={
+                        <Tooltip title="复制">
+                          <IconButton edge="end" size="small" onClick={() => copyMatch(match.match)}>
+                            <ContentCopy fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      }
+                    >
+                      <ListItemText
+                        primary={
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Chip label={`#${index + 1}`} size="small" color="primary" />
+                            <Typography
+                              sx={{
+                                fontFamily: 'monospace',
+                                fontSize: '0.875rem',
+                                color: 'primary.main',
+                                fontWeight: 600,
+                                wordBreak: 'break-all',
+                              }}
+                            >
+                              {match.match}
+                            </Typography>
+                          </Box>
+                        }
+                        secondary={
+                          <Typography variant="caption" color="text.secondary">
+                            位置: {match.index} - {match.index + match.match.length - 1}
+                          </Typography>
+                        }
+                      />
+                    </ListItem>
+                    {match.groups && match.groups.length > 0 && (
+                      <Accordion size="small" sx={{ boxShadow: 'none', backgroundColor: '#f5f5f5' }}>
+                        <AccordionSummary expandIcon={<ExpandMore />}>
+                          <Typography variant="caption" color="text.secondary">
+                            分组 ({match.groups.length})
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails sx={{ pt: 0 }}>
+                          <List dense disablePadding>
+                            {match.groups.map((group, gIdx) => (
+                              <ListItem key={gIdx} sx={{ px: 0, py: 0.25 }}>
+                                <ListItemText
+                                  primary={
+                                    <Typography
+                                      sx={{
+                                        fontFamily: 'monospace',
+                                        fontSize: '0.75rem',
+                                      }}
+                                    >
+                                      ${gIdx + 1}: {group || '(空)'}
+                                    </Typography>
+                                  }
+                                />
+                              </ListItem>
+                            ))}
+                          </List>
+                        </AccordionDetails>
+                      </Accordion>
+                    )}
+                    {match.namedGroups && Object.keys(match.namedGroups).length > 0 && (
+                      <Accordion size="small" sx={{ boxShadow: 'none', backgroundColor: '#f5f5f5' }}>
+                        <AccordionSummary expandIcon={<ExpandMore />}>
+                          <Typography variant="caption" color="text.secondary">
+                            命名分组
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails sx={{ pt: 0 }}>
+                          <List dense disablePadding>
+                            {Object.entries(match.namedGroups).map(([name, val]) => (
+                              <ListItem key={name} sx={{ px: 0, py: 0.25 }}>
+                                <ListItemText
+                                  primary={
+                                    <Typography
+                                      sx={{
+                                        fontFamily: 'monospace',
+                                        fontSize: '0.75rem',
+                                      }}
+                                    >
+                                      {name}: {val || '(空)'}
+                                    </Typography>
+                                  }
+                                />
+                              </ListItem>
+                            ))}
+                          </List>
+                        </AccordionDetails>
+                      </Accordion>
+                    )}
+                    {index < matches.length - 1 && <Divider />}
+                  </React.Fragment>
                 ))}
               </List>
             </Paper>

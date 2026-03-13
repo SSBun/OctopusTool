@@ -23,7 +23,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { ToolDetailHeader } from '../../../components/ToolDetailHeader';
-import { Pattern, Clear, ContentCopy, ExpandMore, CheckCircle, Cancel } from '@mui/icons-material';
+import { Clear, ContentCopy, ExpandMore, CheckCircle, Cancel } from '@mui/icons-material';
 
 interface MatchResult {
   match: string;
@@ -403,7 +403,7 @@ export const RegexTool: React.FC = () => {
                       />
                     </ListItem>
                     {match.groups && match.groups.length > 0 && (
-                      <Accordion size="small" sx={{ boxShadow: 'none', backgroundColor: '#f5f5f5' }}>
+                      <Accordion sx={{ boxShadow: 'none', backgroundColor: '#f5f5f5' }}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
                           <Typography variant="caption" color="text.secondary">
                             分组 ({match.groups.length})
@@ -432,7 +432,7 @@ export const RegexTool: React.FC = () => {
                       </Accordion>
                     )}
                     {match.namedGroups && Object.keys(match.namedGroups).length > 0 && (
-                      <Accordion size="small" sx={{ boxShadow: 'none', backgroundColor: '#f5f5f5' }}>
+                      <Accordion sx={{ boxShadow: 'none', backgroundColor: '#f5f5f5' }}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
                           <Typography variant="caption" color="text.secondary">
                             命名分组
